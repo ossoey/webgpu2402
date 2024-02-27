@@ -36,7 +36,7 @@ Ebk.Colors =  {
 
     rgbaToGrayScaleNrmzd : (params)=> {
 
-        return rgbaToGrayScale(params) / 255 ;
+        return Ebk.Colors.rgbaToGrayScale(params) / 255 ;
 
     } ,
 
@@ -51,7 +51,7 @@ Ebk.Colors =  {
 
     hexToRGBNrmzd : ( params )=> {
 
-        const [r, g, b] = this.hexaToRGB(params) ;
+        const [r, g, b] = Ebk.Colors.hexaToRGB(params) ;
 
         return  [r/255, g/255, b/255];
     } , 
@@ -76,7 +76,6 @@ Ebk.Colors =  {
     }
       
     
-         
 }
 
 let EbkColors = Ebk.Colors
