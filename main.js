@@ -12,9 +12,8 @@ window.addEventListener(`load`, ()=>{
 
     import(`./projects/controller.js`).then((module)=>{
 
-        module.createUIFunctionList();
+        module.run();
 
-       // projects.funcs.createUIFunctionList
     });
 
 });
