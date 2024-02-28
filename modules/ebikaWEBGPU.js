@@ -44,6 +44,13 @@ Ebk.WEBGPU =  {
         "unorm10-10-10-2":{format:"unorm10-10-10-2"  , type:"unsigned normalized" ,components:	4, bytesize:	4	, wgsltype:"vec4<f32>"}
     
       }  ,
+
+      VERTEX_FORMAT_FORMAT : "format", 
+      VERTEX_FORMAT_TYPE   : "type", 
+      VERTEX_FORMAT_COMPONENTS  : "components", 
+      VERTEX_FORMAT_BYTESIZE   : "bytesize", 
+      VERTEX_FORMAT_WGSLTYPE   : "wgsltype", 
+    
     
       vertexFormatValue : (format,attr) => {
       
