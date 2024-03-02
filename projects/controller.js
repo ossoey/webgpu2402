@@ -11,7 +11,7 @@
 
 
 import { triangle} from "./trianglePrj.js";
-
+import { triangle1} from "./trianglePrj1.js";
 
 let projects = {};
 
@@ -35,10 +35,10 @@ let projects = {};
 
  projects.currentProject; 
  
- projects.paramsIn = {context:projects.ui.canvasContext, inputContainer:  projects.ui.inputContainer}
+ projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
-  triangle(projects.paramsIn ), 
+  triangle1(projects.paramsIn ), 
   triangle(projects.paramsIn )
 ] ;
 
@@ -50,7 +50,7 @@ projects.ui.titleIni =() => {
 
 projects.ui.entriesIni = () => {
 
-  let projectOptions =[];
+  let projectOptions = [];
 
   projects.entries.forEach((elt,index)=>{
 
@@ -69,7 +69,13 @@ projects.ui.entriesIni = () => {
 
 
    projects.ui.entries.selectElement.addEventListener(`change`,(event)=>{
+     
+    if (projects.currentProject) {
+        projects.currentProject.releaseResources();
+    }
+
     let select = event.target.options[event.target.selectedIndex];
+    projects.currentProject = projects.entries[select.functionId];
     projects.entries[select.functionId].run();           
     
    });

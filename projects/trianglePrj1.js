@@ -1,10 +1,10 @@
 import { EbkUI} from "../modules/ebikaUI.js";
 
-const triangle = (params = {context:{}}) => {
+const triangle1 = (params = {context:{}}) => {
     let ops = {};
 
     
-    ops.desc = "Triangle";
+    ops.desc = "Triangle1";
     
     // Préparation des données
     ops.ui = {};
@@ -105,7 +105,7 @@ const triangle = (params = {context:{}}) => {
            }
 
            @fragment fn fs() -> @location(0) vec4f {
-              return vec4f(1.0, 0, 0, 1);
+              return vec4f(1.0, 1.0, 0, 1);
            }
         
         ` ;
@@ -261,5 +261,5 @@ const triangle = (params = {context:{}}) => {
 }
 
 
-export {triangle}
-export default triangle;
+export {triangle1}
+export default triangle1;
