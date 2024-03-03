@@ -10,8 +10,10 @@
 // import { EbkMIDI} from "./modules/ebikaMIDI.js";
 
 
-import { triangle} from "./trianglePrj.js";
+import { triangleColoredForeNBackGround} from "./triangleColoredForeNBackGround.js";
 import { triangle1} from "./trianglePrj1.js";
+import { triangle} from "./trianglePrj.js";
+
 
 let projects = {};
 
@@ -38,6 +40,7 @@ let projects = {};
  projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
+  triangleColoredForeNBackGround(projects.paramsIn), 
   triangle1(projects.paramsIn ), 
   triangle(projects.paramsIn )
 ] ;
