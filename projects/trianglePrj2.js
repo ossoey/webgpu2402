@@ -1,10 +1,11 @@
 import { EbkUI} from "../modules/ebikaUI.js";
+ 
 
-const triangle = (params = {context:{}}) => {
+const triangle2 = (params = {context:{}}) => {
     let ops = {};
 
     
-    ops.desc = "Triangle";
+    ops.desc = "Triangle2";
     
     // Préparation des données
     ops.ui = {};
@@ -48,7 +49,34 @@ const triangle = (params = {context:{}}) => {
                                { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
                              ] 
           });
-   
+
+        EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
+          
+
+        ops.ui.vertex2 = EbkUI.createElement_LabeledVertexInputs({
+ 
+            container: params.inputContainer,
+            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            labelProperties: { style: { color: 'blue', display: "grid" }, text: 'vertex 1' },
+            colorProperties:  { type:"color", style: { width: '50px' } },
+            inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
+                               { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
+                             ] 
+        });
+
+        EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })  
+
+        ops.ui.vertex3 = EbkUI.createElement_LabeledVertexInputs({
+ 
+            container: params.inputContainer,
+            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            labelProperties: { style: { color: 'blue', display: "grid" }, text: 'vertex 1' },
+            colorProperties:  { type:"color", style: { width: '50px' } },
+            inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
+                               { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
+                             ] 
+        });
+
 
     }
     
@@ -78,7 +106,7 @@ const triangle = (params = {context:{}}) => {
            }
 
            @fragment fn fs() -> @location(0) vec4f {
-              return vec4f(1.0, 0, 0, 1);
+              return vec4f(1.0, 1.0, 0, 1);
            }
         
         ` ;
@@ -234,5 +262,5 @@ const triangle = (params = {context:{}}) => {
 }
 
 
-export {triangle}
-export default triangle;
+export {triangle2}
+export default triangle2;
