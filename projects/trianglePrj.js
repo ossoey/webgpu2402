@@ -37,18 +37,7 @@ const triangle = (params = {context:{}}) => {
           }}});
 
           
-
-        ops.ui.vertex1 = EbkUI.createElement_LabeledVertexInputs({
  
-            container: params.inputContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue', display: "grid" }, text: 'vertex 1' },
-            colorProperties:  { type:"color", style: { width: '50px' } },
-            inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
-                               { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
-                             ] 
-          });
-   
 
     }
     

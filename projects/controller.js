@@ -9,9 +9,8 @@
 // import { EbkWEBGPU} from "./modules/ebikaWEBGPU.js";
 // import { EbkMIDI} from "./modules/ebikaMIDI.js";
 
-
+import { triangleGradientColorsAndCoords} from "./triangleGradientColorsAndCoords.js";
 import { triangleColoredForeNBackGround} from "./triangleColoredForeNBackGround.js";
-import { triangle1} from "./trianglePrj1.js";
 import { triangle} from "./trianglePrj.js";
 
 
@@ -40,8 +39,8 @@ let projects = {};
  projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
+  triangleGradientColorsAndCoords(projects.paramsIn), 
   triangleColoredForeNBackGround(projects.paramsIn), 
-  triangle1(projects.paramsIn ), 
   triangle(projects.paramsIn )
 ] ;
 
@@ -99,50 +98,7 @@ projects.ui.creation = () => {
     
     projects.ui.creation();
 
-
-
-  
-  // let selectContainer = document.createElement(`div`);
-
-
-  // projects.funcs.createUIInputsContainer();
-
-  //  let projectOptions =[];
-
-  //    projects.entries.forEach((elt,index)=>{
-
-
-  //     projectOptions.push({  functionId: index,  textContent: elt.entry().desc }) 
-
-
-  // });
-
-
- 
-
-  // projects.ui.list =   EbkUI.createElement_LabeledSelect (  {
- 
-  //   options: projectOptions,
-  //     container: document.querySelector(`#menu`),
-     
-  //     labelProperties: { style: {  border: '1px solid #ccc', padding: '12px', margin: '12px' }, text: 'Projects    ' },
-  //     selectProperties: { id: 'projectList', style: { width: '300px', padding: '3px' } }
-  // });
-  
-
-  // projects.ui.elts.list.selectElement.addEventListener(`change`,(event)=>{
-  //     projects.funcs.removeUIInputsContainer();
-  //     let select = event.target.options[event.target.selectedIndex];
-  //     projects.entries[select.functionId].entry().func();           
-      
-  // });
-
-  // projects.funcs.removeUIInputsContainer(); 
-  // projects.entries[0].entry().func();
-
 }
-
-
 
 
 export {  run };
