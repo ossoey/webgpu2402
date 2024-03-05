@@ -94,7 +94,7 @@ projects.ui.entriesIni = () => {
 
    projects.entries[0].run()
 
-   projects.currentProject = projects.entries[0];
+   projects.currentProject = projects.entries[0]
 
 }
 

@@ -7,7 +7,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
     let ops = {};
 
     
-    ops.desc = "Circles Triangle Strip Random attributes";
+    ops.desc = "Mariella is here";
     
     // Préparation des données
     ops.ui = {};
@@ -20,6 +20,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
     ops.env.pipeline;    
     ops.env.canvas = params.canvas;
     ops.env.context = params.context;
+    ops.env.aspect = ops.env.canvas.width / ops.env.canvas.height;
     ops.env.contextFomat;
     ops.objects = {};
  
@@ -39,6 +40,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
             alignItems : "center"
           
           }}});
+
 
 
         ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
@@ -79,15 +81,97 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
  
          EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
 
-         ops.ui.colorBg = EbkUI.createElement_LabeledInput({
- 
-            container: params.inputContainer,
+
+
+        ops.ui.othersContainer = EbkUI.createAndAppendElement({container: params.inputContainer, properties: { 
+            style: { width: '100px', display: "block" }
+         }, 
+            elementType: "div",  });
+
+        ops.ui.colorBg = EbkUI.createElement_LabeledInput({
+
+            container: ops.ui.othersContainer,
             // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
             labelProperties: { style: { color: 'blue', display: "grid" }, text: 'background' },
-            inputProperties: { id: 'colorbgid', type:"color", style: { width: '50px' } }
+            inputProperties: { id: 'colorbgid', type:"color", style: { width: '50px', padding: "2px" } }
+            }).inputElement;   
+
+        ops.ui.colorBg.value = EbkColors.rgbToHexa({color:[0, 55, 188] });
+
+
+        ops.ui.anim =  EbkUI.createElement_LabeledInput({
+ 
+            container: ops.ui.othersContainer,
+            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            labelProperties: { style: { color: 'blue' },  text: 'Anim' },
+            inputProperties: { id: 'mySelect', type: "checkbox",  style: { width: '30px' } }
          }).inputElement;
 
-         ops.ui.colorBg.value = EbkColors.rgbToHexa({color:[0, 55, 188] });
+        ops.ui.anim.checked = true;
+
+         EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
+
+
+         ops.ui.objectsContainer = EbkUI.createAndAppendElement({container: params.inputContainer, properties: { 
+            style: { width: '100px', display: "block" }
+         }, 
+            elementType: "div",  });
+  
+
+         ops.ui.objectCount =  EbkUI.createElement_LabeledInput({
+ 
+            container: ops.ui.objectsContainer,
+            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            labelProperties: { style: { color: 'blue' },  text: 'object count ', width: '30px' },
+            inputProperties:{  min:"1", max:"600", value:"30", step:"1" , style: { width: '70px' }}
+         }).inputElement;
+
+         ops.ui.objectCount.value = 200;
+
+
+
+         ops.ui.objectVertexCount =  EbkUI.createElement_LabeledInput({
+ 
+            container: ops.ui.objectsContainer,
+            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            labelProperties: { style: { color: 'blue' },  text: 'Vertex count ', width: '30px' },
+            inputProperties:{  min:"6", max:"32", value:"10", step:"4" , style: { width: '70px' }}
+         }).inputElement;
+
+         ops.ui.objectVertexCount.value = 6;
+
+         ops.ui.rayon =  EbkUI.createElement_LabeledInput({
+ 
+            container: ops.ui.objectsContainer,
+            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            labelProperties: { style: { color: 'blue' },  text: 'Ray ', width: '30px' },
+            inputProperties:{  min:"0.0001", max:"0.9", value:"10", step:"4" , style: { width: '70px' }}
+         }).inputElement;
+
+         ops.ui.rayon.value = 0.05;
+
+
+         let reload = () =>{
+
+            if  (ops.editFrame) {
+                ops.release();
+                ops.rerun();
+            }
+         }  
+
+        ops.ui.objectCount.oninput = () =>{
+            reload(); 
+         } 
+
+        ops.ui.objectVertexCount.oninput = () =>{
+            reload(); 
+         } 
+
+        ops.ui.rayon.oninput = () =>{
+            reload(); 
+         } 
+
+        
 
 
     }
@@ -101,8 +185,8 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
         ops.objects.attr.colors = {};
         ops.objects.attr.speed = {};
 
-        ops.objects.count = 6000; 
-        ops.objects.vertexCount = 6; 
+        ops.objects.count = Number(ops.ui.objectCount.value); 
+        ops.objects.vertexCount = Number(ops.ui.objectVertexCount.value); 
     }
 
     ops.getVertexInfo = (vertex) => {
@@ -159,8 +243,11 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
         ops.objects.attr.colors.data = new Float32Array(ops.objects.count*3);
         ops.objects.attr.speed.data =  new Float32Array(ops.objects.count*2);
         
-        let rx = 0.07;
-        let ry = 0.05;
+
+        
+
+        let rx = Number( ops.ui.rayon.value) ;
+        let ry = rx/ops.env.aspect ;
 
 
         ops.objects.attr.coords.data[0] = rx; 
@@ -186,7 +273,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
 
             let circleInfo = ops.getRandomInfo();
 
-            let speed = Ebk.Rand.fRanges({ranges:[[0.001, 0.009]], clamps:[[0,1]]});
+            let speed = Ebk.Rand.fRanges({ranges:[[0.0001, 0.0009]], clamps:[[0,1]]});
             ops.objects.attr.speed.data[2*indx] = speed;
             ops.objects.attr.speed.data[2*indx+1] = speed;
 
@@ -336,33 +423,39 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
     // dessiner
     ops.draw = () => {
 
+        ops.env.aspect = ops.env.canvas.width / ops.env.canvas.height;
+
         let color = EbkColors.hexToRGBNrmzd({hexaColor: ops.ui.colorBg.value }) ; 
 
+        if (ops.ui.anim.checked ) {
 
-        let renderPassDesc = {
-            colorAttachments: [
-                { 
-                    clearValue: [color[0] , color[1], color[2], 1.0], 
-                    loadOp : "clear", 
-                    storeOp: "store", 
-                    view: ops.env.context.getCurrentTexture().createView()
-                }
-            ]
-        };
+            let renderPassDesc = {
+                colorAttachments: [
+                    { 
+                        clearValue: [color[0] , color[1], color[2], 1.0], 
+                        loadOp : "clear", 
+                        storeOp: "store", 
+                        view: ops.env.context.getCurrentTexture().createView()
+                    }
+                ]
+            };
+    
+    
+            ops.env.commandEncoder = ops.env.device.createCommandEncoder();
+            let passEncoder = ops.env.commandEncoder.beginRenderPass(renderPassDesc);
+            passEncoder.setPipeline(ops.env.pipeline);
+            passEncoder.setVertexBuffer(0, ops.objects.attr.coords.buffer );
+            passEncoder.setVertexBuffer(1, ops.objects.attr.offsets.buffer );
+            passEncoder.setVertexBuffer(2, ops.objects.attr.colors.buffer );
+            passEncoder.draw(ops.objects.vertexCount, ops.objects.count);
+            passEncoder.end();
+    
+            ops.env.commandBuffer = ops.env.commandEncoder.finish();
+    
+            ops.env.device.queue.submit([ops.env.commandBuffer]);
+        }
 
 
-        ops.env.commandEncoder = ops.env.device.createCommandEncoder();
-        let passEncoder = ops.env.commandEncoder.beginRenderPass(renderPassDesc);
-        passEncoder.setPipeline(ops.env.pipeline);
-        passEncoder.setVertexBuffer(0, ops.objects.attr.coords.buffer );
-        passEncoder.setVertexBuffer(1, ops.objects.attr.offsets.buffer );
-        passEncoder.setVertexBuffer(2, ops.objects.attr.colors.buffer );
-        passEncoder.draw(ops.objects.vertexCount, ops.objects.count);
-        passEncoder.end();
-
-        ops.env.commandBuffer = ops.env.commandEncoder.finish();
-
-        ops.env.device.queue.submit([ops.env.commandBuffer]);
         
     }
 
@@ -470,7 +563,40 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
         ops.ui.circleTriangleStrip1.y.oninput = ops.instanceChange;
 
         ops.editFrame();
-        
+      
+    }
+
+    ops.rerun = async () =>{
+
+        try {
+            ops.iniDataStructures();
+            ops.iniData();
+
+            await ops.iniWEBGPU();
+            ops.configPipeline();
+            
+        }
+        catch(e) {
+              
+           alert(e.message);
+           return;
+
+        }
+
+        ops.draw();
+
+        ops.ui.colorBg.oninput = ops.draw;
+
+        ops.ui.circleTriangleStrip.color.oninput = ops.instanceChange;
+        ops.ui.circleTriangleStrip.x.oninput = ops.instanceChange;
+        ops.ui.circleTriangleStrip.y.oninput = ops.instanceChange;
+
+        ops.ui.circleTriangleStrip1.color.oninput = ops.instanceChange;
+        ops.ui.circleTriangleStrip1.x.oninput = ops.instanceChange;
+        ops.ui.circleTriangleStrip1.y.oninput = ops.instanceChange;
+
+        ops.editFrame();
+      
     }
 
     // Libére la mémoire   
