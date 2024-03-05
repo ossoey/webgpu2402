@@ -9,6 +9,13 @@
 // import { EbkWEBGPU} from "./modules/ebikaWEBGPU.js";
 // import { EbkMIDI} from "./modules/ebikaMIDI.js";
 
+circleTriangleStrip
+
+
+
+import { circlesTriangleStripRandomAttributes} from "./circlesTriangleStripRandomAttributes.js";
+import { circleTriangleStripRandomAttributes} from "./circleTriangleStripRandomAttributes.js";
+import { circleTriangleStrip} from "./circleTriangleStrip.js";
 import { triangleGradientColorsAndCoords} from "./triangleGradientColorsAndCoords.js";
 import { triangleColoredForeNBackGround} from "./triangleColoredForeNBackGround.js";
 import { triangle} from "./trianglePrj.js";
@@ -39,6 +46,9 @@ let projects = {};
  projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
+  circlesTriangleStripRandomAttributes(projects.paramsIn),
+  circleTriangleStripRandomAttributes(projects.paramsIn), 
+  circleTriangleStrip(projects.paramsIn), 
   triangleGradientColorsAndCoords(projects.paramsIn), 
   triangleColoredForeNBackGround(projects.paramsIn), 
   triangle(projects.paramsIn )
@@ -83,6 +93,8 @@ projects.ui.entriesIni = () => {
    });
 
    projects.entries[0].run()
+
+   projects.currentProject = projects.entries[0];
 
 }
 
