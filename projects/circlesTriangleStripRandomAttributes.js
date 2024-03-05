@@ -53,8 +53,8 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
           });
 
           ops.ui.circleTriangleStrip.color.value = EbkColors.rgbToHexa({color:[130, 55, 188] });
-          ops.ui.circleTriangleStrip.x.value = -0.7;
-          ops.ui.circleTriangleStrip.y.value = -0.7;
+          ops.ui.circleTriangleStrip.x.value = -0.9;
+          ops.ui.circleTriangleStrip.y.value = -0.9;
           
  
          EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
@@ -73,8 +73,8 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
           });
 
           ops.ui.circleTriangleStrip1.color.value = EbkColors.rgbToHexa({color:[13, 200, 18] });
-          ops.ui.circleTriangleStrip1.x.value = 0.7;
-          ops.ui.circleTriangleStrip1.y.value = 0.7;
+          ops.ui.circleTriangleStrip1.x.value = 0.9;
+          ops.ui.circleTriangleStrip1.y.value = 0.9;
           
  
          EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
@@ -101,8 +101,8 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
         ops.objects.attr.colors = {};
         ops.objects.attr.speed = {};
 
-        ops.objects.count = 600; 
-        ops.objects.vertexCount = 32; 
+        ops.objects.count = 6000; 
+        ops.objects.vertexCount = 6; 
     }
 
     ops.getVertexInfo = (vertex) => {
@@ -159,20 +159,24 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
         ops.objects.attr.colors.data = new Float32Array(ops.objects.count*3);
         ops.objects.attr.speed.data =  new Float32Array(ops.objects.count*2);
         
-        ops.objects.attr.coords.data[0] = 0.1; 
+        let rx = 0.07;
+        let ry = 0.05;
+
+
+        ops.objects.attr.coords.data[0] = rx; 
         ops.objects.attr.coords.data[1] = 0; 
         
         for(let vxndx = 1; vxndx<= ((ops.objects.vertexCount)/2)-1; vxndx++)  {
 
              let angle = (2*Math.PI/ops.objects.vertexCount)*vxndx; 
 
-            ops.objects.attr.coords.data[4*(vxndx - 1)+2] = 0.1*Math.cos(angle); 
-            ops.objects.attr.coords.data[4*(vxndx - 1)+3] = -0.1*Math.sin(angle);
-            ops.objects.attr.coords.data[4*(vxndx - 1)+4] = 0.1*Math.cos(angle);
-            ops.objects.attr.coords.data[4*(vxndx - 1)+5] = 0.1*Math.sin(angle); 
+            ops.objects.attr.coords.data[4*(vxndx - 1)+2] = rx*Math.cos(angle); 
+            ops.objects.attr.coords.data[4*(vxndx - 1)+3] = -ry*Math.sin(angle);
+            ops.objects.attr.coords.data[4*(vxndx - 1)+4] = rx*Math.cos(angle);
+            ops.objects.attr.coords.data[4*(vxndx - 1)+5] = ry*Math.sin(angle); 
         }
 
-        ops.objects.attr.coords.data[2*ops.objects.vertexCount -2] = -0.1; 
+        ops.objects.attr.coords.data[2*ops.objects.vertexCount -2] = -rx; 
         ops.objects.attr.coords.data[2*ops.objects.vertexCount -1] = 0; 
         
 
@@ -366,6 +370,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
     // Modifer le frame 
     ops.editFrame = () => {
 
+
         for(let indx = 0; indx<ops.objects.count; indx++)  {
 
             let x = 2*indx;
@@ -375,7 +380,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
             ops.objects.attr.offsets.data[y] += ops.objects.attr.speed.data[y];
 
             if (ops.objects.attr.offsets.data[x] > 0.9) {
-                ops.objects.attr.speed.data[x] = -ops.objects.attr.speed.data[x];
+                ops.objects.attr.speed.data[x] = -ops.objects. attr.speed.data[x];
             } else if (ops.objects.attr.offsets.data[x] < -0.9) {
                 ops.objects.attr.speed.data[x] = -ops.objects.attr.speed.data[x];
             }
