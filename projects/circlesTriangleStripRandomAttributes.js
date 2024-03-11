@@ -92,8 +92,8 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
 
             container: ops.ui.othersContainer,
             // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue', display: "grid" }, text: 'background' },
-            inputProperties: { id: 'colorbgid', type:"color", style: { width: '50px', padding: "2px" } }
+            labelProperties: { style: { color: 'blue', display: "grid", padding: "5px"}, text: 'background' },
+            inputProperties: { id: 'colorbgid', type:"color", style: { width: '50px' } }
             }).inputElement;   
 
         ops.ui.colorBg.value = EbkColors.rgbToHexa({color:[0, 55, 188] });
@@ -123,7 +123,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
             container: ops.ui.objectsContainer,
             // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
             labelProperties: { style: { color: 'blue' },  text: 'object count ', width: '30px' },
-            inputProperties:{  min:"1", max:"600", value:"30", step:"1" , style: { width: '70px' }}
+            inputProperties:{ type:"range", min:"1", max:"6000", value:"30", step:"1" , style: { width: '100px' }}
          }).inputElement;
 
          ops.ui.objectCount.value = 200;
@@ -135,7 +135,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
             container: ops.ui.objectsContainer,
             // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
             labelProperties: { style: { color: 'blue' },  text: 'Vertex count ', width: '30px' },
-            inputProperties:{  min:"6", max:"32", value:"10", step:"4" , style: { width: '70px' }}
+            inputProperties:{  type:"range", min:"4", max:"16", value:"10", step:"1" , style: { width: '100px' }}
          }).inputElement;
 
          ops.ui.objectVertexCount.value = 6;
@@ -145,7 +145,7 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
             container: ops.ui.objectsContainer,
             // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
             labelProperties: { style: { color: 'blue' },  text: 'Ray ', width: '30px' },
-            inputProperties:{  min:"0.0001", max:"0.9", value:"10", step:"4" , style: { width: '70px' }}
+            inputProperties:{ type:"range", min:"0.009", max:"0.1", value:"10", step:"0.0001" , style: { width: '100px' }}
          }).inputElement;
 
          ops.ui.rayon.value = 0.05;
@@ -159,15 +159,15 @@ const circlesTriangleStripRandomAttributes = (params = {context:{}}) => {
             }
          }  
 
-        ops.ui.objectCount.oninput = () =>{
+        ops.ui.objectCount.onchange = () =>{
             reload(); 
          } 
 
-        ops.ui.objectVertexCount.oninput = () =>{
+        ops.ui.objectVertexCount.onchange = () =>{
             reload(); 
          } 
 
-        ops.ui.rayon.oninput = () =>{
+        ops.ui.rayon.onchange = () =>{
             reload(); 
          } 
 
