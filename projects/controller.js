@@ -13,6 +13,8 @@ circleTriangleStrip
 
 
 
+
+import { square} from "./square.js";
 import { circlesTriangleStripRandomAttributes} from "./circlesTriangleStripRandomAttributes.js";
 import { circleTriangleStripRandomAttributes} from "./circleTriangleStripRandomAttributes.js";
 import { circleTriangleStrip} from "./circleTriangleStrip.js";
@@ -46,6 +48,7 @@ let projects = {};
  projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
+  square(projects.paramsIn),
   circlesTriangleStripRandomAttributes(projects.paramsIn),
   circleTriangleStripRandomAttributes(projects.paramsIn), 
   circleTriangleStrip(projects.paramsIn), 
