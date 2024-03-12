@@ -9,11 +9,12 @@
 // import { EbkWEBGPU} from "./modules/ebikaWEBGPU.js";
 // import { EbkMIDI} from "./modules/ebikaMIDI.js";
 
-circleTriangleStrip
 
 
 
 
+
+import { squareInGrid} from "./squareInGrid.js";
 import { square} from "./square.js";
 import { circlesTriangleStripRandomAttributes} from "./circlesTriangleStripRandomAttributes.js";
 import { circleTriangleStripRandomAttributes} from "./circleTriangleStripRandomAttributes.js";
@@ -48,6 +49,7 @@ let projects = {};
  projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
+  squareInGrid(projects.paramsIn),
   square(projects.paramsIn),
   circlesTriangleStripRandomAttributes(projects.paramsIn),
   circleTriangleStripRandomAttributes(projects.paramsIn), 
