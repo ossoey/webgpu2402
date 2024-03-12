@@ -232,7 +232,7 @@ const squareInGrid = (params = {context:{}}) => {
           let cell = vec2f(i % grid.x, floor(i / grid.x));
 
           let cellOffset = cell / grid * 2;
-          let gridPos = (coord + 1) / grid - 1 + cellOffset;
+          let gridPos = (coord +1) / grid - 1 + cellOffset;
 
 
         //   var vertexOut : VertexOut; 
@@ -240,8 +240,19 @@ const squareInGrid = (params = {context:{}}) => {
         //   offset  = vec2f(i % grid[0], floor(i/grid[0]));
         //   vertexOut.pos = vec4f(offset+ coord, 0.0, 1.0);
         //   vertexOut.color = vec4f(color, 1.0);
+
+        var c = cos(0.15);
+        var s = sin(0.35);
+    
+        var mat = mat2x2(
+            vec2<f32>(c, -s),
+            vec2<f32>(s, c)
+        );
           
-           vertexOut.pos = vec4f(gridPos, 0.0, 1.0);
+          vertexOut.pos = vec4f(gridPos*mat, 0.0, 1.0);
+        //   vertexOut.pos = vec4f(vec2f(gridPos[0], gridPos[1]), 0.0, 1.0);
+
+
            vertexOut.color = vec4f(color, 1.0);
 
           return vertexOut;
