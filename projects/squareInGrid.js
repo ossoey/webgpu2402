@@ -204,7 +204,7 @@ const squareInGrid = (params = {context:{}}) => {
         ]);
 
 
-        ops.objects.gridSize = 5;
+        ops.objects.gridSize = 10;
 
         ops.objects.unif.gridSize.data = new Float32Array([
             ops.objects.gridSize,  ops.objects.gridSize
@@ -226,34 +226,21 @@ const squareInGrid = (params = {context:{}}) => {
 
 
           var vertexOut : VertexOut; 
-          var offset: vec2f;
+        //   var offset: vec2f;
           let i = f32(ii);  
 
-          let cell = vec2f(i % grid.x, floor(i / grid.x));
-
-          let cellOffset = cell / grid * 2;
-          let gridPos = (coord +1) / grid - 1 + cellOffset;
-
-
-        //   var vertexOut : VertexOut; 
-        //   var offset: vec2f;
-        //   offset  = vec2f(i % grid[0], floor(i/grid[0]));
-        //   vertexOut.pos = vec4f(offset+ coord, 0.0, 1.0);
-        //   vertexOut.color = vec4f(color, 1.0);
-
-        var c = cos(0.15);
-        var s = sin(0.35);
-    
+        let tt = 1.0;
+        
         var mat = mat2x2(
-            vec2<f32>(c, -s),
-            vec2<f32>(s, c)
-        );
-          
-          vertexOut.pos = vec4f(gridPos*mat, 0.0, 1.0);
-        //   vertexOut.pos = vec4f(vec2f(gridPos[0], gridPos[1]), 0.0, 1.0);
+            vec2f((2/grid[0])*tt, 0),
+               vec2f(0,  (2/grid[1])*tt )
+         );
 
 
-           vertexOut.color = vec4f(color, 1.0);
+        let offset = vec2f( (2/grid[0])*(i % grid[0]) -1+0.01, (2/grid[1])* floor(i / grid[0]) -1+0.01);
+
+        vertexOut.pos  = vec4f(offset + mat*(((7)*(coord+0.8))/(1.6*grid) ), 0.0, 1.0);
+        vertexOut.color = vec4f(color, 1.0);
 
           return vertexOut;
 
