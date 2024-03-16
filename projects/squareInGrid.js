@@ -43,43 +43,43 @@ const squareInGrid = (params = {context:{}}) => {
 
 
 
-        ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
+        // ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
  
-            container: params.inputContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue', display: "grid" }, text: 'Attributs' },
-            colorProperties:  { type:"color", style: { width: '50px' } },
-            inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
-                               { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
-                             ] 
-          });
+        //     container: params.inputContainer,
+        //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+        //     labelProperties: { style: { color: 'blue', display: "grid" }, text: 'Attributs' },
+        //     colorProperties:  { type:"color", style: { width: '50px' } },
+        //     inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
+        //                        { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
+        //                      ] 
+        //   });
 
-          ops.ui.circleTriangleStrip.color.value = EbkColors.rgbToHexa({color:[130, 55, 188] });
-          ops.ui.circleTriangleStrip.x.value = -0.9;
-          ops.ui.circleTriangleStrip.y.value = -0.9;
+        //   ops.ui.circleTriangleStrip.color.value = EbkColors.rgbToHexa({color:[130, 55, 188] });
+        //   ops.ui.circleTriangleStrip.x.value = -0.9;
+        //   ops.ui.circleTriangleStrip.y.value = -0.9;
           
  
-         EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
+        //  EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
   
 
          
-        ops.ui.circleTriangleStrip1 = EbkUI.createElement_LabeledVertexInputs({
+        // ops.ui.circleTriangleStrip1 = EbkUI.createElement_LabeledVertexInputs({
  
-            container: params.inputContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue', display: "grid" }, text: 'Attributs 1' },
-            colorProperties:  { type:"color", style: { width: '50px' } },
-            inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
-                               { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
-                             ] 
-          });
+        //     container: params.inputContainer,
+        //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+        //     labelProperties: { style: { color: 'blue', display: "grid" }, text: 'Attributs 1' },
+        //     colorProperties:  { type:"color", style: { width: '50px' } },
+        //     inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } },
+        //                        { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '50px' } }
+        //                      ] 
+        //   });
 
-          ops.ui.circleTriangleStrip1.color.value = EbkColors.rgbToHexa({color:[13, 200, 18] });
-          ops.ui.circleTriangleStrip1.x.value = 0.9;
-          ops.ui.circleTriangleStrip1.y.value = 0.9;
+        //   ops.ui.circleTriangleStrip1.color.value = EbkColors.rgbToHexa({color:[13, 200, 18] });
+        //   ops.ui.circleTriangleStrip1.x.value = 0.9;
+        //   ops.ui.circleTriangleStrip1.y.value = 0.9;
           
  
-         EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
+        //  EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
 
 
 
@@ -99,77 +99,57 @@ const squareInGrid = (params = {context:{}}) => {
         ops.ui.colorBg.value = EbkColors.rgbToHexa({color:[0, 55, 188] });
 
 
-        ops.ui.anim =  EbkUI.createElement_LabeledInput({
+        // ops.ui.anim =  EbkUI.createElement_LabeledInput({
  
-            container: ops.ui.othersContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue' },  text: 'Anim' },
-            inputProperties: { id: 'mySelect', type: "checkbox",  style: { width: '30px' } }
-         }).inputElement;
+        //     container: ops.ui.othersContainer,
+        //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+        //     labelProperties: { style: { color: 'blue' },  text: 'Anim' },
+        //     inputProperties: { id: 'mySelect', type: "checkbox",  style: { width: '30px' } }
+        //  }).inputElement;
 
-        ops.ui.anim.checked = true;
+        // ops.ui.anim.checked = true;
 
-         EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
+        //  EbkUI.createAndAppendElement({container: params.inputContainer, properties: {innerHTML:"&nbsp;&nbsp;&nbsp " }, elementType: "div"  })
 
 
-         ops.ui.objectsContainer = EbkUI.createAndAppendElement({container: params.inputContainer, properties: { 
-            style: { width: '100px', display: "block" }
-         }, 
-            elementType: "div",  });
+        //  ops.ui.objectsContainer = EbkUI.createAndAppendElement({container: params.inputContainer, properties: { 
+        //     style: { width: '100px', display: "block" }
+        //  }, 
+        //     elementType: "div",  });
   
 
-         ops.ui.objectCount =  EbkUI.createElement_LabeledInput({
+        //  ops.ui.objectCount =  EbkUI.createElement_LabeledInput({
  
-            container: ops.ui.objectsContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue' },  text: 'object count ', width: '30px' },
-            inputProperties:{ type:"range", min:"1", max:"6000", value:"30", step:"1" , style: { width: '100px' }}
-         }).inputElement;
+        //     container: ops.ui.objectsContainer,
+        //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+        //     labelProperties: { style: { color: 'blue' },  text: 'object count ', width: '30px' },
+        //     inputProperties:{ type:"range", min:"1", max:"6000", value:"30", step:"1" , style: { width: '100px' }}
+        //  }).inputElement;
 
-         ops.ui.objectCount.value = 200;
+        //  ops.ui.objectCount.value = 200;
 
 
 
-         ops.ui.objectVertexCount =  EbkUI.createElement_LabeledInput({
+        //  ops.ui.objectVertexCount =  EbkUI.createElement_LabeledInput({
  
-            container: ops.ui.objectsContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue' },  text: 'Vertex count ', width: '30px' },
-            inputProperties:{  type:"range", min:"4", max:"16", value:"10", step:"1" , style: { width: '100px' }}
-         }).inputElement;
+        //     container: ops.ui.objectsContainer,
+        //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+        //     labelProperties: { style: { color: 'blue' },  text: 'Vertex count ', width: '30px' },
+        //     inputProperties:{  type:"range", min:"4", max:"16", value:"10", step:"1" , style: { width: '100px' }}
+        //  }).inputElement;
 
-         ops.ui.objectVertexCount.value = 6;
+        //  ops.ui.objectVertexCount.value = 6;
 
-         ops.ui.rayon =  EbkUI.createElement_LabeledInput({
+        //  ops.ui.rayon =  EbkUI.createElement_LabeledInput({
  
-            container: ops.ui.objectsContainer,
-            // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            labelProperties: { style: { color: 'blue' },  text: 'Ray ', width: '30px' },
-            inputProperties:{ type:"range", min:"0.009", max:"0.1", value:"10", step:"0.0001" , style: { width: '100px' }}
-         }).inputElement;
+        //     container: ops.ui.objectsContainer,
+        //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+        //     labelProperties: { style: { color: 'blue' },  text: 'Ray ', width: '30px' },
+        //     inputProperties:{ type:"range", min:"0.009", max:"0.1", value:"10", step:"0.0001" , style: { width: '100px' }}
+        //  }).inputElement;
 
-         ops.ui.rayon.value = 0.05;
+        //  ops.ui.rayon.value = 0.05;
 
-
-        //  let reload = () =>{
-
-        //     if  (ops.editFrame) {
-        //         ops.release();
-        //         ops.rerun();
-        //     }
-        //  }  
-
-        // ops.ui.objectCount.onchange = () =>{
-        //     reload(); 
-        //  } 
-
-        // ops.ui.objectVertexCount.onchange = () =>{
-        //     reload(); 
-        //  } 
-
-        // ops.ui.rayon.onchange = () =>{
-        //     reload(); 
-        //  } 
 
         
 
@@ -378,7 +358,7 @@ const squareInGrid = (params = {context:{}}) => {
 
         let color = EbkColors.hexToRGBNrmzd({hexaColor: ops.ui.colorBg.value }) ; 
 
-        if (ops.ui.anim.checked ) {
+       
 
             let renderPassDesc = {
                 colorAttachments: [
@@ -404,7 +384,7 @@ const squareInGrid = (params = {context:{}}) => {
             ops.env.commandBuffer = ops.env.commandEncoder.finish();
     
             ops.env.device.queue.submit([ops.env.commandBuffer]);
-        }
+    
 
 
         
@@ -415,31 +395,6 @@ const squareInGrid = (params = {context:{}}) => {
     ops.editFrame = () => {
 
 
-        // for(let indx = 0; indx<ops.objects.count; indx++)  {
-
-        //     let x = 2*indx;
-        //     let y = 2*indx+1;
-        //     ops.objects.attr.offsets.data[x] += ops.objects.attr.speed.data[x];
-
-        //     ops.objects.attr.offsets.data[y] += ops.objects.attr.speed.data[y];
-
-        //     if (ops.objects.attr.offsets.data[x] > 0.9) {
-        //         ops.objects.attr.speed.data[x] = -ops.objects. attr.speed.data[x];
-        //     } else if (ops.objects.attr.offsets.data[x] < -0.9) {
-        //         ops.objects.attr.speed.data[x] = -ops.objects.attr.speed.data[x];
-        //     }
-
-        //     if (ops.objects.attr.offsets.data[y] > 0.9) {
-        //         ops.objects.attr.speed.data[y] = -ops.objects.attr.speed.data[y];
-        //     } else if (ops.objects.attr.offsets.data[y] < -0.9) {
-        //         ops.objects.attr.speed.data[y] = -ops.objects.attr.speed.data[y];
-        //     }
-
-            
-        // }    
-
-        // ops.env.device.queue.writeBuffer(  ops.objects.attr.offsets.buffer, 0,  ops.objects.attr.offsets.data);
-        // ops.env.device.queue.writeBuffer(  ops.objects.attr.colors.buffer, 0,  ops.objects.attr.colors.data);
 
         ops.draw(); 
 
@@ -448,39 +403,7 @@ const squareInGrid = (params = {context:{}}) => {
     }
 
 
-    // Déclencher l'animation
-
-
-    // Exécuter le programme. 
-
-
-    // ops.instanceChange = () => {
-
-
-    //     // let circleInfo = ops.getVertexInfo(ops.ui.circleTriangleStrip);
-    //     let circleInfo = ops.getRandomInfo();
-
-        
-    //     for(let indx = 0; indx<ops.objects.count; indx++)  {
-
-    //         let circleInfo = ops.getRandomInfo();
-
-    //         ops.objects.attr.offsets.data[2*indx] = circleInfo.x 
-    //         ops.objects.attr.offsets.data[2*indx+1] = circleInfo.y; 
-
-    //         ops.objects.attr.colors.data[3*indx] = circleInfo.r; 
-    //         ops.objects.attr.colors.data[3*indx+1] = circleInfo.g; 
-    //         ops.objects.attr.colors.data[3*indx+2] = circleInfo.b; 
-
-    //     }    
-
-         
-    //     ops.env.device.queue.writeBuffer(  ops.objects.attr.offsets.buffer, 0,  ops.objects.attr.offsets.data);
-    //     ops.env.device.queue.writeBuffer(  ops.objects.attr.colors.buffer, 0,  ops.objects.attr.colors.data);
-
-    //     ops.draw(); 
- 
-    // }
+   
 
 
     ops.run = async () =>{
@@ -505,16 +428,7 @@ const squareInGrid = (params = {context:{}}) => {
 
           ops.ui.colorBg.oninput = ops.draw;
 
-        // ops.ui.circleTriangleStrip.color.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip.x.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip.y.oninput = ops.instanceChange;
-
-        // ops.ui.circleTriangleStrip1.color.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip1.x.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip1.y.oninput = ops.instanceChange;
-
-        // ops.editFrame();
-      
+         
     }
 
     ops.rerun = async () =>{
@@ -536,33 +450,12 @@ const squareInGrid = (params = {context:{}}) => {
 
         ops.draw();
 
-        // ops.ui.colorBg.oninput = ops.draw;
-
-        // ops.ui.circleTriangleStrip.color.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip.x.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip.y.oninput = ops.instanceChange;
-
-        // ops.ui.circleTriangleStrip1.color.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip1.x.oninput = ops.instanceChange;
-        // ops.ui.circleTriangleStrip1.y.oninput = ops.instanceChange;
-
-        // ops.editFrame();
       
     }
 
     // Libére la mémoire   
     ops.release = () =>{
 
-       // Release the vertex buffer layout
-        // if (vertexBufferLayout) {
-        //   vertexBufferLayout = null;
-        // }
-
-       // Release the bind group
-        // if (ops.env.unifBindGroup) {
-        //    // ops.env.unifBindGroup.destroy();
-        //     ops.env.unifBindGroup = null;
-        // }
 
         
         cancelAnimationFrame(ops.env.animationPointer);
@@ -577,24 +470,7 @@ const squareInGrid = (params = {context:{}}) => {
             ops.env.pipeline = null;
         }
 
-        // // Release the vertex buffer
-        // if (ops.objects.attr.coords.buffer) {
-        //     ops.objects.attr.coords.buffer.destroy();
-        //     ops.objects.attr.coords.buffer = null;
-        // }
 
-        // // Release the vertex buffer
-        // if (ops.objects.attr.offsets.buffer) {
-        //     ops.objects.attr.offsets.buffer.destroy();
-        //     ops.objects.attr.offsets.buffer = null;
-        // }
-
-        // // Release the vertex buffer
-        // if (ops.objects.attr.colors.buffer) {
-        //     ops.objects.attr.colors.buffer.destroy();
-        //     ops.objects.attr.colors.buffer = null;
-        // }
-    
 
 
         if (ops.env.commandEncoder) {

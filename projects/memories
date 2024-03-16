@@ -1,0 +1,35 @@
+
+Environment: 
+  Canvas, texture, 
+  adapter, device, shaderCode, shaderModule, pipelines
+
+Resources: 
+    
+   data(Float32Array(), Uint16Array()) 
+   vertexLayout, bindGroupLayout, 
+   buffers(unform, storage, vertex, index), 
+   texture({
+    size:[context.canvas.width, context.canvas.height], 
+    format:navigator.gpu.getPreferredCanvasFormat(), 
+    sampleCount:, 
+    usage: GPUTextureUsage.RENDER_ATTACHMENT
+
+   }), sampler()
+   bindGroup
+
+pass:
+
+renderPassDescritor = {
+    colorAttachments : [
+        {
+            clearValue: [],
+            loadOp: "clear" , 
+            storeOP: "store", 
+            view: context.getCurrentTexture().createView()
+        }
+    ]
+}
+
+
+
+
