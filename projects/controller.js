@@ -11,9 +11,7 @@
 
 
 
-
-
-
+import { polygone_bindgroup} from "./polygone_bindgroup.js";
 import { squareInGrid} from "./squareInGrid.js";
 import { square} from "./square.js";
 import { circlesTriangleStripRandomAttributes} from "./circlesTriangleStripRandomAttributes.js";
@@ -49,6 +47,8 @@ let projects = {};
  projects.paramsIn = {context:projects.ui.canvasContext, canvas: projects.ui.canvas , inputContainer:  projects.ui.inputContainer}
  
  projects.entries = [
+
+  polygone_bindgroup(projects.paramsIn),
   squareInGrid(projects.paramsIn),
   square(projects.paramsIn),
   circlesTriangleStripRandomAttributes(projects.paramsIn),

@@ -11,7 +11,7 @@ Resources:
    texture({
     size:[context.canvas.width, context.canvas.height], 
     format:navigator.gpu.getPreferredCanvasFormat(), 
-    sampleCount:, 
+    sampleCount:5, 
     usage: GPUTextureUsage.RENDER_ATTACHMENT
 
    }), sampler()
