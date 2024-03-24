@@ -121,14 +121,25 @@ const polygone_bindgroup = (params = {context:{}}) => {
     // Initialiser les structures de données. 
     ops.iniDataStructures = () => {
 
-        ops.objects.vertexCount = 8;
-        ops.objects.instanceCount = 1;
-    
+        ops.objects.vxCount = 8;
+        ops.objects.count = 1;
+        ops.objects.mag = 0.12;
+        ops.objects.phase = 0.19;
 
         ops.objects.attr = {};
         ops.objects.attr.coords = {};
 
-        ops.objects.attr.coords.data = new Float32Array((2+3)*ops.objects.vertexCount*ops.objects.instanceCount);
+        ops.objects.unif = {};
+        ops.objects.unif.vxcoords = {};
+        ops.objects.unif.vxcolors = {};
+        ops.objects.unif.offsets  = {};
+        ops.objects.unif.colors   = {};
+
+
+        ops.objects.unif.vxcoords.data = new Float32Array(3*2*ops.objects.vxCount);
+        ops.objects.unif.vxcolors.data = new Float32Array(3*3*ops.objects.vxCount);
+        ops.objects.unif.offsets.data  = new Float32Array(2*ops.objects.count);
+        ops.objects.unif.colors.data   = new Float32Array(3*ops.objects.count);
 
  
     }
@@ -156,51 +167,94 @@ const polygone_bindgroup = (params = {context:{}}) => {
         let vtx3 = ops.getVertexInfo(ops.ui.vertex3);
         
 
-        ops.objects.attr.coords.data = new Float32Array([
+        // ops.objects.attr.coords.data = new Float32Array([
 
-            vtx1.x, vtx1.y, vtx1.r, vtx1.g, vtx1.b,     // data for first vertex
-            vtx2.x, vtx2.y, vtx2.r, vtx2.g, vtx2.b,     // data for second vertex
-            vtx3.x, vtx3.y, vtx3.r, vtx3.g, vtx3.b,  
+        //     vtx1.x, vtx1.y, vtx1.r, vtx1.g, vtx1.b,     // data for first vertex
+        //     vtx2.x, vtx2.y, vtx2.r, vtx2.g, vtx2.b,     // data for second vertex
+        //     vtx3.x, vtx3.y, vtx3.r, vtx3.g, vtx3.b,  
 
-        ]); 
+        // ]); 
 
+        let geoAngle = (vi, vxCount, ph = 0) => {
+            return ph + 2*Math.PI* (vi) / (vxCount-1)
+        }
 
-        ops.env.shaderColorsUtils = `
-        
-         fn color_blendAVG(colorA: vec3f, colorB: vec3f  )->vec3f {
-             return  (colorA + colorB) / 2;
-         }
+        let geoRay  = (vi, vxCount, ph, mag) => {
+            return mag * Math.sin(geoAngle(vi, vxCount, ph));
+        }
 
-         fn color_blendADD(colorA: vec3f, colorB: vec3f  )->vec3f {
+        let geovxCoords  = (vi, vxCount ) => {
 
-            return  vec3f(
-                  min(colorA.r + colorA.r, 1)
-                ,
-                  min(colorA.g + colorA.g, 1)
-                ,
-                  min(colorA.b + colorA.b, 1)
-                );
-         }
+            let angle = geoAngle(vi, vxCount,  ops.objects.phase);
+            let ray   = geoRay(vi, vxCount,  ops.objects.phase, ops.objects.mag );
 
-         fn color_blendMULT(colorA: vec3f, colorB: vec3f  )->vec3f {
-            return  (colorA * colorB);
-         }
+            return { x : ray*Math.cos(angle) , y: ray*Math.sin(angle) }
+        }
 
 
-        
-        `
+
+        for (let vi = 1; vi<ops.objects.vxCount; vi++) {
+
+            let ctr = {x: 0, y: 0};
+
+            let pt0 = geovxCoords(vi-1);  
+
+            let pt1 = geovxCoords(vi); 
+
+            ops.objects.unif.vxcoords.data[3*2*(vi)]   = ctr.x;
+            ops.objects.unif.vxcoords.data[3*2*(vi)+1] = ctr.y;
+
+            ops.objects.unif.vxcoords.data[3*2*(vi)+2] = pt0.x;
+            ops.objects.unif.vxcoords.data[3*2*(vi)+3] = pt0.y;
+
+            ops.objects.unif.vxcoords.data[3*2*(vi)+4] = pt1.x;
+            ops.objects.unif.vxcoords.data[3*2*(vi)+5] = pt1.y;
+
+            let color1 =  [0.2, 0.8, 0.5];
+
+            let color2 =  [0.6, 0.1, 0.1]; 
+
+            let color3 =  [0.1, 0.1, 0.6];
+
+            ops.objects.unif.vxcolors.data[3*3*(vi)]   = ctr.x;
+            ops.objects.unif.vxcolors.data[3*3*(vi)+1] = ctr.y;
+            ops.objects.unif.vxcolors.data[3*3*(vi)+2] = ctr.y;
+
+            ops.objects.unif.vxcolors.data[3*3*(vi)+2] = pt0.x;
+            ops.objects.unif.vxcolors.data[3*3*(vi)+3] = pt0.y;
+            ops.objects.unif.vxcolors.data[3*3*(vi)+2]
+
+            ops.objects.unif.vxcolors.data[3*3*(vi)+4] = pt1.x;
+            ops.objects.unif.vxcolors.data[3*3*(vi)+5] = pt1.y;
+            ops.objects.unif.vxcolors.data[3*3*(vi)+2]
+
+ 
+        }
+
+        ops.objects.unif.vxcoords.data = new Float32Array(2*(ops.objects.vxCount+1));
+
+        ops.objects.unif.vxcolors.data = new Float32Array(3*(ops.objects.vxCount+1));
+        ops.objects.unif.offsets.data  = new Float32Array(2*ops.objects.count);
+        ops.objects.unif.colors.data   = new Float32Array(3*ops.objects.count);
+
+
                
         ops.env.shaderCode = `
         
+
+        fn color_blendAVG(colorA: vec3f, colorB: vec3f  )->vec3f {
+            return  (colorA + colorB) / 2;
+        }
+
         struct VertexOut {
             @builtin(position) pos: vec4f, 
             @location(0) color: vec4f, 
         }
 
-        @group(0) @binding(0) var <uniform> geovx_coords: array<vec2f>;
-        @group(0) @binding(1) var <uniform> geovx_colors: array<vec3f>;
+        @group(0) @binding(0) var <uniform> geovx_coords:  array<vec2f>;
+        @group(0) @binding(1) var <uniform> geovx_colors:  array<vec3f>;
         @group(0) @binding(2) var <uniform> insce_offsets: array<vec2f>;
-        @group(0) @binding(3) var <uniform> insce_colors: array<vec3f>;
+        @group(0) @binding(3) var <uniform> insce_colors:  array<vec3f>;
       
 
         @vertex fn vs(@builtin(instance_index) ii: u32, @builtin(vertex_index) vi: u32)-> VertexOut {
@@ -215,10 +269,10 @@ const polygone_bindgroup = (params = {context:{}}) => {
          );
 
           var vertex = vec3f(geovx_coords[vi], 0);
-          var color_transfer = geovx_colors[vi]+insce_colors[ii]
-          
-          vertexOut.pos = vec4f( vertex*mat_translation, 1.0);
-          vertexOut.color = vec4f(vertex_color, 1.0);
+       
+          vertexOut.pos = vec4f( mat_translation*vertex, 1.0);
+
+          vertexOut.color = vec4f( color_blendAVG(insce_colors[ii], geovx_colors[vi] ), 1.0);
           
           return vertexOut;
 
@@ -264,16 +318,23 @@ const polygone_bindgroup = (params = {context:{}}) => {
     // configurer le pipeline
     ops.configPipeline = () => {
          
-        ops.env.vertexBufferLayout = [
-            {
-               attributes: [{shaderLocation: 0, offset: 0, format:"float32x2"}, 
-                            {shaderLocation: 1, offset: 8, format:"float32x3"}], 
+        // ops.env.vertexBufferLayout = [
+        //     {
+        //        attributes: [{shaderLocation: 0, offset: 0, format:"float32x2"}, 
+        //                     {shaderLocation: 1, offset: 8, format:"float32x3"}], 
              
-               arrayStride: 20,
-               stepMode: "vertex"
-            }
-        ]
+        //        arrayStride: 20,
+        //        stepMode: "vertex"
+        //     }
+        // ]
         
+
+        // @group(0) @binding(0) var <uniform> geovx_coords:  array<vec2f>;
+        // @group(0) @binding(1) var <uniform> geovx_colors:  array<vec3f>;
+        // @group(0) @binding(2) var <uniform> insce_offsets: array<vec2f>;
+        // @group(0) @binding(3) var <uniform> insce_colors:  array<vec3f>;
+
+
         ops.env.bindGroupLayout = ops.env.device.createBindGroupLayout({
             entries: [
                 {
@@ -282,6 +343,13 @@ const polygone_bindgroup = (params = {context:{}}) => {
                     buffer:{
                         type:"uniform"
                     }
+                }  , 
+
+                {
+                    binding: 1, 
+                    visibility: GPUShaderStage.VERTEX, 
+                    buffer: {type: "uniform"}
+                     
                 }
             ]
         });
