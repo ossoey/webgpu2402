@@ -73,7 +73,61 @@ Ebk.Colors =  {
         const hexColor = `#${hexRed}${hexGreen}${hexBlue}`;
       
         return hexColor.toUpperCase(); // Convert to uppercase for consistency
-    }
+    }, 
+
+    shaderUtils: `
+        
+        fn color_blendAVG(colorA: vec3f, colorB: vec3f  )->vec3f {
+            return  (colorA + colorB) / 2;
+        }
+
+        fn color_blendADD(colorA: vec3f, colorB: vec3f  )->vec3f {
+
+            return  vec3f(
+                    min(colorA.r + colorA.r, 1)
+                ,
+                    min(colorA.g + colorA.g, 1)
+                ,
+                    min(colorA.b + colorA.b, 1)
+                );
+        }
+
+        fn color_blendMULT(colorA: vec3f, colorB: vec3f  )->vec3f {
+            return  (colorA * colorB);
+        } 
+
+        fn color_blendSCREEN(colorA: vec3f, colorB: vec3f, customvect: vec3f  )->vec3f {
+ 
+            return  vec3f(
+                1.0 - (1.0 - colorA.r) * (1.0 - colorB.r)
+            ,
+                1.0 - (1.0 - colorA.g) * (1.0 - colorB.g)
+            ,
+                1.0 - (1.0 - colorA.b) * (1.0 - colorB.b)
+            );
+        } 
+
+        fn color_blendOVERLAY(colorA: vec3f, colorB: vec3f )->vec3f {
+            //colorA Base color (background) 
+            //colorB Blend color (foreground)  
+
+            var colorOutPut: vec3f; 
+
+            var luminance = 0.2126 * colorA.r +  0.7152 * colorA.g + 0.0722 * colorA.b;
+
+            if (luminance < 0.5) {  // "Multiply"
+                colorOutPut = color_blendMULT(colorA, colorB);
+            } else {  // "screen"
+                color_blendSCREEN(colorA, colorB);
+            }
+
+            return  colorOutPut;
+        } 
+            
+    `
+
+
+   
       
     
 }

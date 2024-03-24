@@ -120,8 +120,15 @@ const polygone_bindgroup = (params = {context:{}}) => {
 
     // Initialiser les structures de données. 
     ops.iniDataStructures = () => {
+
+        ops.objects.vertexCount = 8;
+        ops.objects.instanceCount = 1;
+    
+
         ops.objects.attr = {};
         ops.objects.attr.coords = {};
+
+        ops.objects.attr.coords.data = new Float32Array((2+3)*ops.objects.vertexCount*ops.objects.instanceCount);
 
  
     }
@@ -157,6 +164,31 @@ const polygone_bindgroup = (params = {context:{}}) => {
 
         ]); 
 
+
+        ops.env.shaderColorsUtils = `
+        
+         fn color_blendAVG(colorA: vec3f, colorB: vec3f  )->vec3f {
+             return  (colorA + colorB) / 2;
+         }
+
+         fn color_blendADD(colorA: vec3f, colorB: vec3f  )->vec3f {
+
+            return  vec3f(
+                  min(colorA.r + colorA.r, 1)
+                ,
+                  min(colorA.g + colorA.g, 1)
+                ,
+                  min(colorA.b + colorA.b, 1)
+                );
+         }
+
+         fn color_blendMULT(colorA: vec3f, colorB: vec3f  )->vec3f {
+            return  (colorA * colorB);
+         }
+
+
+        
+        `
                
         ops.env.shaderCode = `
         
@@ -165,21 +197,25 @@ const polygone_bindgroup = (params = {context:{}}) => {
             @location(0) color: vec4f, 
         }
 
-        @group(0) @binding(0) var <uniform> bindgroup_coords : array<f32>;
+        @group(0) @binding(0) var <uniform> geovx_coords: array<vec2f>;
+        @group(0) @binding(1) var <uniform> geovx_colors: array<vec3f>;
+        @group(0) @binding(2) var <uniform> insce_offsets: array<vec2f>;
+        @group(0) @binding(3) var <uniform> insce_colors: array<vec3f>;
       
 
-        @vertex fn vs(@builtin(instance_index) ii: u32, @location(1) vertex_coords: vec2f, @location(2) vertex_color: vec3f )-> VertexOut {
+        @vertex fn vs(@builtin(instance_index) ii: u32, @builtin(vertex_index) vi: u32)-> VertexOut {
 
           var vertexOut : VertexOut; 
 
           var mat_translation = mat3x3(
             vec3f((1, 0, 0),
             vec3f(0, 1, 0 ),
-            vec3f(bindgroup_coords[2*ii], bindgroup_coords[2*ii+1], 1 ),
+            vec3f(insce_offsets[ii], 1 ),
 
          );
 
-         var vertex = vec3f(vertex_coords, 0);
+          var vertex = vec3f(geovx_coords[vi], 0);
+          var color_transfer = geovx_colors[vi]+insce_colors[ii]
           
           vertexOut.pos = vec4f( vertex*mat_translation, 1.0);
           vertexOut.color = vec4f(vertex_color, 1.0);
@@ -238,6 +274,17 @@ const polygone_bindgroup = (params = {context:{}}) => {
             }
         ]
         
+        ops.env.bindGroupLayout = ops.env.device.createBindGroupLayout({
+            entries: [
+                {
+                    binding: 0, 
+                    visibility: GPUShaderStage.VERTEX,
+                    buffer:{
+                        type:"uniform"
+                    }
+                }
+            ]
+        });
 
         let pipelineDesc = {
 
