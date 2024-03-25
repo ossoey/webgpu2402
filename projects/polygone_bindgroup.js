@@ -1,3 +1,5 @@
+
+import { Ebk} from "../modules/ebika.js";
 import { EbkUI} from "../modules/ebikaUI.js";
 import { EbkColors} from "../modules/ebikaColors.js";
 
@@ -121,25 +123,25 @@ const polygone_bindgroup = (params = {context:{}}) => {
     // Initialiser les structures de données. 
     ops.iniDataStructures = () => {
 
-        ops.objects.vxCount = 8;
-        ops.objects.count = 1;
-        ops.objects.mag = 0.12;
-        ops.objects.phase = 0.19;
+        ops.objects.vxCount = 24;
+        ops.objects.count = 2;
+        ops.objects.mag = 0.42;
+        ops.objects.phase = 0.17;
 
         ops.objects.attr = {};
         ops.objects.attr.coords = {};
 
         ops.objects.unif = {};
-        ops.objects.unif.vxcoords = {};
-        ops.objects.unif.vxcolors = {};
-        ops.objects.unif.offsets  = {};
-        ops.objects.unif.colors   = {};
+        ops.objects.unif.vxCoords = {};
+        ops.objects.unif.vxColors = {};
+        ops.objects.unif.insceOffsets  = {};
+        ops.objects.unif.insceColors   = {};
 
 
-        ops.objects.unif.vxcoords.data = new Float32Array(3*2*ops.objects.vxCount);
-        ops.objects.unif.vxcolors.data = new Float32Array(3*3*ops.objects.vxCount);
-        ops.objects.unif.offsets.data  = new Float32Array(2*ops.objects.count);
-        ops.objects.unif.colors.data   = new Float32Array(3*ops.objects.count);
+        ops.objects.unif.vxCoords.data = new Float32Array(3*2*ops.objects.vxCount);
+        ops.objects.unif.vxColors.data = new Float32Array(3*3*ops.objects.vxCount);
+        ops.objects.unif.insceOffsets.data  = new Float32Array(2*ops.objects.count);
+        ops.objects.unif.insceColors.data   = new Float32Array(3*ops.objects.count);
 
  
     }
@@ -158,6 +160,86 @@ const polygone_bindgroup = (params = {context:{}}) => {
     }
 
     
+    ops.iniGeometry = () => {
+
+        let geoAngle = (vi, vxCount, ph = 0) => {
+            return ph + 2*Math.PI* (vi) / (vxCount-1)
+        }
+
+        let geoRay  = (vi, vxCount, ph, mag) => {
+            return mag * vi * 0.1 // Math.sin(geoAngle(vi, vxCount, ph));
+        }
+
+        let geovxCoords  = (vi, vxCount ) => {
+
+            let angle = geoAngle(vi, vxCount,  ops.objects.phase);
+            let ray   = geoRay(vi, vxCount,  ops.objects.phase, ops.objects.mag );
+
+            return { x :  ray*Math.cos(angle) , y:  ray*Math.sin(angle) }
+        }
+
+
+        for (let vi = 1; vi<ops.objects.vxCount; vi++) {
+
+            let ctr = {x: 0, y: 0};
+
+            let pt0 = geovxCoords(vi -1, ops.objects.vxCount);  
+
+            let pt1 = geovxCoords(vi, ops.objects.vxCount); 
+
+            ops.objects.unif.vxCoords.data[3*2*(vi)]   = ctr.x;
+            ops.objects.unif.vxCoords.data[3*2*(vi)+1] = ctr.y;
+
+            ops.objects.unif.vxCoords.data[3*2*(vi)+2] = pt0.x;
+            ops.objects.unif.vxCoords.data[3*2*(vi)+3] = pt0.y;
+
+            ops.objects.unif.vxCoords.data[3*2*(vi)+4] = pt1.x;
+            ops.objects.unif.vxCoords.data[3*2*(vi)+5] = pt1.y;
+
+            let color1 =  [0.2, 0.8, 0.5];
+
+            let color2 =  [0.6, 0.1, 0.1]; 
+
+            let color3 =  [0.1, 0.1, 0.6];
+
+            ops.objects.unif.vxColors.data[3*3*(vi)]   = color1[0];
+            ops.objects.unif.vxColors.data[3*3*(vi)+1] = color1[1];
+            ops.objects.unif.vxColors.data[3*3*(vi)+2] = color1[2];
+
+            ops.objects.unif.vxColors.data[3*3*(vi)+3] = color2[0];
+            ops.objects.unif.vxColors.data[3*3*(vi)+4] = color2[1];
+            ops.objects.unif.vxColors.data[3*3*(vi)+5] = color2[2];
+
+            ops.objects.unif.vxColors.data[3*3*(vi)+6] = color3[0];
+            ops.objects.unif.vxColors.data[3*3*(vi)+7] = color3[1];
+            ops.objects.unif.vxColors.data[3*3*(vi)+8] = color3[2];
+
+ 
+        }
+
+        console.log(Ebk.Sequence.GridWholeNumber.dataGetSum({step:8}))
+
+              console.log(Ebk.Sequence.GridWholeNumber.labelGetRow({dataRef:36}))   
+
+              Ebk.Sequence.GridWholeNumber.tests();
+                 
+    }
+
+    ops.iniInstancesOffsetsAndColor = () => {
+        
+
+        for (let ii = 0; ii<ops.objects.count; ii++) {
+
+            ops.objects.unif.insceOffsets.data[2*ii] = Ebk.Rand.fRanges({ranges:[[-1.,1.]], clamps:[[0,1]]});
+            ops.objects.unif.insceOffsets.data[2*ii + 1] = Ebk.Rand.fRanges({ranges:[[-1.,1.]], clamps:[[0,1]]});
+
+            ops.objects.unif.insceColors.data[3*ii] = Ebk.Rand.fRanges({ranges:[[0.2, 1.]], clamps:[[0,1]]});
+            ops.objects.unif.insceColors.data[3*ii + 1] = Ebk.Rand.fRanges({ranges:[[0.2,1.]], clamps:[[0,1]]});
+            ops.objects.unif.insceColors.data[3*ii + 2] = Ebk.Rand.fRanges({ranges:[[0.2,1.]], clamps:[[0,1]]});
+
+        }
+
+    }    
  
     // initialiser les données 
     ops.iniData = () => {
@@ -166,6 +248,9 @@ const polygone_bindgroup = (params = {context:{}}) => {
         let vtx2 = ops.getVertexInfo(ops.ui.vertex2);
         let vtx3 = ops.getVertexInfo(ops.ui.vertex3);
         
+        ops.iniGeometry();
+
+        ops.iniInstancesOffsetsAndColor();
 
         // ops.objects.attr.coords.data = new Float32Array([
 
@@ -175,72 +260,46 @@ const polygone_bindgroup = (params = {context:{}}) => {
 
         // ]); 
 
-        let geoAngle = (vi, vxCount, ph = 0) => {
-            return ph + 2*Math.PI* (vi) / (vxCount-1)
-        }
-
-        let geoRay  = (vi, vxCount, ph, mag) => {
-            return mag * Math.sin(geoAngle(vi, vxCount, ph));
-        }
-
-        let geovxCoords  = (vi, vxCount ) => {
-
-            let angle = geoAngle(vi, vxCount,  ops.objects.phase);
-            let ray   = geoRay(vi, vxCount,  ops.objects.phase, ops.objects.mag );
-
-            return { x : ray*Math.cos(angle) , y: ray*Math.sin(angle) }
-        }
 
 
 
-        for (let vi = 1; vi<ops.objects.vxCount; vi++) {
-
-            let ctr = {x: 0, y: 0};
-
-            let pt0 = geovxCoords(vi-1);  
-
-            let pt1 = geovxCoords(vi); 
-
-            ops.objects.unif.vxcoords.data[3*2*(vi)]   = ctr.x;
-            ops.objects.unif.vxcoords.data[3*2*(vi)+1] = ctr.y;
-
-            ops.objects.unif.vxcoords.data[3*2*(vi)+2] = pt0.x;
-            ops.objects.unif.vxcoords.data[3*2*(vi)+3] = pt0.y;
-
-            ops.objects.unif.vxcoords.data[3*2*(vi)+4] = pt1.x;
-            ops.objects.unif.vxcoords.data[3*2*(vi)+5] = pt1.y;
-
-            let color1 =  [0.2, 0.8, 0.5];
-
-            let color2 =  [0.6, 0.1, 0.1]; 
-
-            let color3 =  [0.1, 0.1, 0.6];
-
-            ops.objects.unif.vxcolors.data[3*3*(vi)]   = ctr.x;
-            ops.objects.unif.vxcolors.data[3*3*(vi)+1] = ctr.y;
-            ops.objects.unif.vxcolors.data[3*3*(vi)+2] = ctr.y;
-
-            ops.objects.unif.vxcolors.data[3*3*(vi)+2] = pt0.x;
-            ops.objects.unif.vxcolors.data[3*3*(vi)+3] = pt0.y;
-            ops.objects.unif.vxcolors.data[3*3*(vi)+2]
-
-            ops.objects.unif.vxcolors.data[3*3*(vi)+4] = pt1.x;
-            ops.objects.unif.vxcolors.data[3*3*(vi)+5] = pt1.y;
-            ops.objects.unif.vxcolors.data[3*3*(vi)+2]
-
- 
-        }
-
-        ops.objects.unif.vxcoords.data = new Float32Array(2*(ops.objects.vxCount+1));
-
-        ops.objects.unif.vxcolors.data = new Float32Array(3*(ops.objects.vxCount+1));
-        ops.objects.unif.offsets.data  = new Float32Array(2*ops.objects.count);
-        ops.objects.unif.colors.data   = new Float32Array(3*ops.objects.count);
 
 
                
         ops.env.shaderCode = `
         
+
+        fn color_blendMULT(colorA: vec3f, colorB: vec3f  )->vec3f {
+            return  (colorA * colorB);
+        } 
+
+        fn color_blendSCREEN(colorA: vec3f, colorB: vec3f  )->vec3f {
+ 
+            return  vec3f(
+                1.0 - (1.0 - colorA.r) * (1.0 - colorB.r)
+            ,
+                1.0 - (1.0 - colorA.g) * (1.0 - colorB.g)
+            ,
+                1.0 - (1.0 - colorA.b) * (1.0 - colorB.b)
+            );
+        } 
+
+        fn color_blendOVERLAY(colorA: vec3f, colorB: vec3f )->vec3f {
+            //colorA Base color (background) 
+            //colorB Blend color (foreground)  
+
+            var colorOutPut: vec3f; 
+
+            var luminance = 0.2126 * colorA.r +  0.7152 * colorA.g + 0.0722 * colorA.b;
+
+            if (luminance < 0.5) {  // "Multiply"
+                colorOutPut = color_blendMULT(colorA, colorB);
+            } else {  // "screen"
+                color_blendSCREEN(colorA, colorB);
+            }
+
+            return  colorOutPut;
+        } 
 
         fn color_blendAVG(colorA: vec3f, colorB: vec3f  )->vec3f {
             return  (colorA + colorB) / 2;
@@ -251,10 +310,10 @@ const polygone_bindgroup = (params = {context:{}}) => {
             @location(0) color: vec4f, 
         }
 
-        @group(0) @binding(0) var <uniform> geovx_coords:  array<vec2f>;
-        @group(0) @binding(1) var <uniform> geovx_colors:  array<vec3f>;
-        @group(0) @binding(2) var <uniform> insce_offsets: array<vec2f>;
-        @group(0) @binding(3) var <uniform> insce_colors:  array<vec3f>;
+        @group(0) @binding(0) var <storage> geovx_coords:  array<vec2f>;
+        @group(0) @binding(1) var <storage> geovx_colors:  array<vec3f>;
+        @group(0) @binding(2) var <storage> insce_offsets: array<vec2f>;
+        @group(0) @binding(3) var <storage> insce_colors:  array<vec3f>;
       
 
         @vertex fn vs(@builtin(instance_index) ii: u32, @builtin(vertex_index) vi: u32)-> VertexOut {
@@ -262,18 +321,19 @@ const polygone_bindgroup = (params = {context:{}}) => {
           var vertexOut : VertexOut; 
 
           var mat_translation = mat3x3(
-            vec3f((1, 0, 0),
+            vec3f(1, 0, 0),
             vec3f(0, 1, 0 ),
             vec3f(insce_offsets[ii], 1 ),
-
          );
 
           var vertex = vec3f(geovx_coords[vi], 0);
        
           vertexOut.pos = vec4f( mat_translation*vertex, 1.0);
 
-          vertexOut.color = vec4f( color_blendAVG(insce_colors[ii], geovx_colors[vi] ), 1.0);
+          vertexOut.color = vec4f( color_blendMULT(insce_colors[ii], geovx_colors[vi] ), 1.0);
           
+          //vertexOut.color = vec4f( insce_colors[ii], 1.0);
+
           return vertexOut;
 
         }
@@ -336,32 +396,53 @@ const polygone_bindgroup = (params = {context:{}}) => {
 
 
         ops.env.bindGroupLayout = ops.env.device.createBindGroupLayout({
+                                           
             entries: [
+                    
                 {
                     binding: 0, 
                     visibility: GPUShaderStage.VERTEX,
                     buffer:{
-                        type:"uniform"
+                        type:"read-only-storage"
                     }
                 }  , 
 
                 {
                     binding: 1, 
                     visibility: GPUShaderStage.VERTEX, 
-                    buffer: {type: "uniform"}
+                    buffer: {type: "read-only-storage"}
                      
-                }
+                } , 
+
+                {
+                    binding: 2, 
+                    visibility: GPUShaderStage.VERTEX, 
+                    buffer: {
+                        type: "read-only-storage"
+                    }
+                } , 
+
+                {
+                    binding: 3, 
+                    visibility: GPUShaderStage.VERTEX, 
+                    buffer: {
+                        type: "read-only-storage"
+                    }
+                } 
             ]
         });
 
         let pipelineDesc = {
 
-            layout: "auto", 
+            layout: ops.env.device.createPipelineLayout({
+                bindGroupLayouts: [ops.env.bindGroupLayout]
+                
+            }), 
 
             vertex: {
                 module: ops.env.shaderModule, 
-                entryPoint: "vs", 
-                buffers: ops.env.vertexBufferLayout 
+                entryPoint: "vs"
+                // buffers: ops.env.vertexBufferLayout 
             } , 
 
             fragment: {
@@ -373,20 +454,82 @@ const polygone_bindgroup = (params = {context:{}}) => {
             }, 
 
             primitive: {
-                topology: "triangle-list"
+                topology: "triangle-strip"
             }
         }
 
 
         ops.env.pipeline = ops.env.device.createRenderPipeline(pipelineDesc);
 
-        ops.objects.attr.coords.buffer = ops.env.device.createBuffer({
-            size: ops.objects.attr.coords.data.byteLength, 
-            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+        ops.objects.unif.vxCoords.buffer = ops.env.device.createBuffer({
+            size: ops.objects.unif.vxCoords.data.byteLength, 
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
 
         });
 
-        ops.env.device.queue.writeBuffer( ops.objects.attr.coords.buffer, 0, ops.objects.attr.coords.data);
+        ops.env.device.queue.writeBuffer( ops.objects.unif.vxCoords.buffer, 0, ops.objects.unif.vxCoords.data);
+
+
+        ops.objects.unif.vxColors.buffer = ops.env.device.createBuffer({
+            size: ops.objects.unif.vxColors.data.byteLength, 
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+
+        });
+
+        ops.env.device.queue.writeBuffer( ops.objects.unif.vxColors.buffer, 0, ops.objects.unif.vxColors.data);
+
+
+        ops.objects.unif.insceOffsets.buffer = ops.env.device.createBuffer({
+            size: ops.objects.unif.insceOffsets.data.byteLength, 
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+
+        });
+
+        ops.env.device.queue.writeBuffer( ops.objects.unif.insceOffsets.buffer, 0, ops.objects.unif.insceOffsets.data);
+
+
+        ops.objects.unif.insceColors.buffer = ops.env.device.createBuffer({
+            size: ops.objects.unif.insceColors.data.byteLength, 
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+
+        });
+
+        ops.env.device.queue.writeBuffer( ops.objects.unif.insceColors.buffer, 0, ops.objects.unif.insceColors.data);
+
+
+
+
+        ops.env.bindGroup = ops.env.device.createBindGroup({
+            layout: ops.env.bindGroupLayout, 
+            entries: [
+                {
+                  binding: 0, 
+                  resource: {
+                    buffer:  ops.objects.unif.vxCoords.buffer, offset: 0, size: 4*3*2*ops.objects.vxCount
+                  }
+                } ,
+                {
+                    binding: 1, 
+                    resource: {
+                      buffer:  ops.objects.unif.vxColors.buffer, offset: 0, size: 4*3*3*ops.objects.vxCount
+                    }
+                } ,
+                {
+                    binding: 2, 
+                    resource: {
+                      buffer:  ops.objects.unif.insceOffsets.buffer, offset: 0, size: 4*2*ops.objects.count
+                    }
+                } ,
+                {
+                    binding: 3, 
+                    resource: {
+                      buffer:  ops.objects.unif.insceColors.buffer, offset: 0, size: 4*3*ops.objects.count
+                    }
+                  } ,
+                                                               
+            
+            ]
+        });
         
         
     }
@@ -412,8 +555,8 @@ const polygone_bindgroup = (params = {context:{}}) => {
         let commandEncoder = ops.env.device.createCommandEncoder();
         let passEncoder = commandEncoder.beginRenderPass(renderPassDesc);
         passEncoder.setPipeline(ops.env.pipeline);
-        passEncoder.setVertexBuffer(0, ops.objects.attr.coords.buffer );
-        passEncoder.draw(3);
+        passEncoder.setBindGroup(0, ops.env.bindGroup); 
+        passEncoder.draw(3*ops.objects.vxCount, ops.objects.count);
         passEncoder.end();
 
         let commandBuffer = commandEncoder.finish();
@@ -517,33 +660,33 @@ const polygone_bindgroup = (params = {context:{}}) => {
         // }
 
 
-        // Release the bind group layout
-        if (ops.env.vertexBufferLayout) {
-            ops.env.vertexBufferLayout = null;
-        }
+        // // Release the bind group layout
+        // if (ops.env.vertexBufferLayout) {
+        //     ops.env.vertexBufferLayout = null;
+        // }
 
-        // Release the pipeline
-        if (ops.env.pipeline) {
-            ops.env.pipeline = null;
-        }
+        // // Release the pipeline
+        // if (ops.env.pipeline) {
+        //     ops.env.pipeline = null;
+        // }
 
-        // Release the vertex buffer
-        if (ops.objects.attr.coords.buffer) {
-            ops.objects.attr.coords.buffer.destroy();
-            ops.objects.attr.coords.buffer = null;
-        }
+        // // Release the vertex buffer
+        // if (ops.objects.attr.coords.buffer) {
+        //     ops.objects.attr.coords.buffer.destroy();
+        //     ops.objects.attr.coords.buffer = null;
+        // }
 
 
 
-        if (ops.env.device) {
-            ops.env.device.destroy();
-            ops.env.device = null;
-        }
+        // if (ops.env.device) {
+        //     ops.env.device.destroy();
+        //     ops.env.device = null;
+        // }
     
-        // Release the adapter (optional)
-        if (ops.env.adapter) {
-            ops.env.adapter = null;
-        }
+        // // Release the adapter (optional)
+        // if (ops.env.adapter) {
+        //     ops.env.adapter = null;
+        // }
 
     }
     
