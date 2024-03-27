@@ -123,9 +123,10 @@ const polygone_bindgroup = (params = {context:{}}) => {
     // Initialiser les structures de données. 
     ops.iniDataStructures = () => {
 
-        ops.objects.vxCount = 24;
-        ops.objects.count = 2;
-        ops.objects.mag = 0.42;
+        ops.objects.edgCount = 25;  
+        ops.objects.vxCount = 3 * ops.objects.edgCount;
+        ops.objects.count = 3;
+        ops.objects.mag = 0.3;
         ops.objects.phase = 0.17;
 
         ops.objects.attr = {};
@@ -138,8 +139,8 @@ const polygone_bindgroup = (params = {context:{}}) => {
         ops.objects.unif.insceColors   = {};
 
 
-        ops.objects.unif.vxCoords.data = new Float32Array(3*2*ops.objects.vxCount);
-        ops.objects.unif.vxColors.data = new Float32Array(3*3*ops.objects.vxCount);
+        ops.objects.unif.vxCoords.data = new Float32Array(2*ops.objects.vxCount);
+        ops.objects.unif.vxColors.data = new Float32Array(3*ops.objects.vxCount);
         ops.objects.unif.insceOffsets.data  = new Float32Array(2*ops.objects.count);
         ops.objects.unif.insceColors.data   = new Float32Array(3*ops.objects.count);
 
@@ -162,9 +163,31 @@ const polygone_bindgroup = (params = {context:{}}) => {
     
     ops.iniGeometry = () => {
 
-        let geoAngle = (vi, vxCount, ph = 0) => {
-            return ph + 2*Math.PI* (vi) / (vxCount-1)
+        let pgnVxNdx = (edgndx) => {
+           return   Ebk.Sequence.GridWholeNumber.dataGetSum({step:edgndx});
         }
+
+        let cirAngle = (cirNdx, cirNdxMax ) => {
+            return 2*Math.PI* (cirNdx) / (cirNdxMax-1)
+        }
+
+        let pgnAngle = (edgndx  ) => {
+            return  cirAngle(pgnVxNdx(edgndx), pgnVxNdx(ops.objects.edgCount)); 
+        }
+
+        let pgnvxCoords  = (pgnvxNdx ) => {
+
+            let angle = pgnAngle(pgnvxNdx);
+            let ray   = ops.objects.mag;
+
+            return { x :  ray*Math.cos(angle) , y:  ray*Math.sin(angle) }
+        }
+
+
+        let geoAngle = (vi, vxCount) => {
+            return 2*Math.PI* (vi) / (vxCount-1)
+        }
+
 
         let geoRay  = (vi, vxCount, ph, mag) => {
             return mag * vi * 0.1 // Math.sin(geoAngle(vi, vxCount, ph));
@@ -179,22 +202,22 @@ const polygone_bindgroup = (params = {context:{}}) => {
         }
 
 
-        for (let vi = 1; vi<ops.objects.vxCount; vi++) {
+        for (let pgnvxNdx = 1; pgnvxNdx < ops.objects.edgCount; pgnvxNdx++) {
 
             let ctr = {x: 0, y: 0};
 
-            let pt0 = geovxCoords(vi -1, ops.objects.vxCount);  
+            let pt0 = pgnvxCoords(pgnvxNdx -1, ops.objects.vxCount);  
 
-            let pt1 = geovxCoords(vi, ops.objects.vxCount); 
+            let pt1 = pgnvxCoords(pgnvxNdx, ops.objects.vxCount); 
 
-            ops.objects.unif.vxCoords.data[3*2*(vi)]   = ctr.x;
-            ops.objects.unif.vxCoords.data[3*2*(vi)+1] = ctr.y;
+            ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)]   = ctr.x;
+            ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)+1] = ctr.y;
 
-            ops.objects.unif.vxCoords.data[3*2*(vi)+2] = pt0.x;
-            ops.objects.unif.vxCoords.data[3*2*(vi)+3] = pt0.y;
+            ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)+2] = pt0.x;
+            ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)+3] = pt0.y;
 
-            ops.objects.unif.vxCoords.data[3*2*(vi)+4] = pt1.x;
-            ops.objects.unif.vxCoords.data[3*2*(vi)+5] = pt1.y;
+            ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)+4] = pt1.x;
+            ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)+5] = pt1.y;
 
             let color1 =  [0.2, 0.8, 0.5];
 
@@ -202,26 +225,29 @@ const polygone_bindgroup = (params = {context:{}}) => {
 
             let color3 =  [0.1, 0.1, 0.6];
 
-            ops.objects.unif.vxColors.data[3*3*(vi)]   = color1[0];
-            ops.objects.unif.vxColors.data[3*3*(vi)+1] = color1[1];
-            ops.objects.unif.vxColors.data[3*3*(vi)+2] = color1[2];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)]   = color1[0];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+1] = color1[1];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+2] = color1[2];
 
-            ops.objects.unif.vxColors.data[3*3*(vi)+3] = color2[0];
-            ops.objects.unif.vxColors.data[3*3*(vi)+4] = color2[1];
-            ops.objects.unif.vxColors.data[3*3*(vi)+5] = color2[2];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+3] = color2[0];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+4] = color2[1];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+5] = color2[2];
 
-            ops.objects.unif.vxColors.data[3*3*(vi)+6] = color3[0];
-            ops.objects.unif.vxColors.data[3*3*(vi)+7] = color3[1];
-            ops.objects.unif.vxColors.data[3*3*(vi)+8] = color3[2];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+6] = color3[0];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+7] = color3[1];
+            ops.objects.unif.vxColors.data[3*3*(pgnvxNdx)+8] = color3[2];
 
  
         }
 
-        console.log(Ebk.Sequence.GridWholeNumber.dataGetSum({step:8}))
 
-              console.log(Ebk.Sequence.GridWholeNumber.labelGetRow({dataRef:36}))   
 
-              Ebk.Sequence.GridWholeNumber.tests();
+
+        console.log(ops.objects.unif  )
+
+               
+
+             
                  
     }
 
@@ -497,7 +523,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
         ops.env.device.queue.writeBuffer( ops.objects.unif.insceColors.buffer, 0, ops.objects.unif.insceColors.data);
 
 
-
+        ops.objects.vxCount = 3 * ops.objects.edgCount;
 
         ops.env.bindGroup = ops.env.device.createBindGroup({
             layout: ops.env.bindGroupLayout, 
@@ -505,13 +531,13 @@ const polygone_bindgroup = (params = {context:{}}) => {
                 {
                   binding: 0, 
                   resource: {
-                    buffer:  ops.objects.unif.vxCoords.buffer, offset: 0, size: 4*3*2*ops.objects.vxCount
+                    buffer:  ops.objects.unif.vxCoords.buffer, offset: 0, size: 4*2*ops.objects.vxCount
                   }
                 } ,
                 {
                     binding: 1, 
                     resource: {
-                      buffer:  ops.objects.unif.vxColors.buffer, offset: 0, size: 4*3*3*ops.objects.vxCount
+                      buffer:  ops.objects.unif.vxColors.buffer, offset: 0, size: 4*3*ops.objects.vxCount
                     }
                 } ,
                 {
