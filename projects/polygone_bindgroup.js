@@ -123,7 +123,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
     // Initialiser les structures de données. 
     ops.iniDataStructures = () => {
 
-        ops.objects.edgCount = 25;  
+        ops.objects.edgCount =  Ebk.Rand.iRanges({ranges:[[4., 12]], clamps:[[0,1]]})   
         ops.objects.vxCount = 3 * ops.objects.edgCount;
         ops.objects.count = 3;
         ops.objects.mag = 0.3;
@@ -167,17 +167,20 @@ const polygone_bindgroup = (params = {context:{}}) => {
            return   Ebk.Sequence.GridWholeNumber.dataGetSum({step:edgndx});
         }
 
-        let cirAngle = (cirNdx, cirNdxMax ) => {
-            return 2*Math.PI* (cirNdx) / (cirNdxMax-1)
+        let cirAngle = (cirNdx, cirNdxMax, ph = 0.99 ) => {
+           
+           // let ph = Ebk.Rand.fRanges({ranges:[[0., 0.3]], clamps:[[0,1]]}) 
+
+            return ph + 2*Math.PI* (cirNdx) / (cirNdxMax-1)
         }
 
-        let pgnAngle = (edgndx  ) => {
-            return  cirAngle(pgnVxNdx(edgndx), pgnVxNdx(ops.objects.edgCount)); 
+        let pgnAngle = (edgndx, ph = 0.99  ) => {
+            return  cirAngle(pgnVxNdx(edgndx), pgnVxNdx(ops.objects.edgCount), ph); 
         }
 
-        let pgnvxCoords  = (pgnvxNdx ) => {
+        let pgnvxCoords  = (pgnvxNdx, ph = 0.99 ) => {
 
-            let angle = pgnAngle(pgnvxNdx);
+            let angle = pgnAngle(pgnvxNdx, ph);
             let ray   = ops.objects.mag;
 
             return { x :  ray*Math.cos(angle) , y:  ray*Math.sin(angle) }
@@ -201,14 +204,19 @@ const polygone_bindgroup = (params = {context:{}}) => {
             return { x :  ray*Math.cos(angle) , y:  ray*Math.sin(angle) }
         }
 
+        let ph = Ebk.Rand.fRanges({ranges:[[0., 5.3]], clamps:[[0,1]]}) 
 
         for (let pgnvxNdx = 1; pgnvxNdx < ops.objects.edgCount; pgnvxNdx++) {
 
+
+
             let ctr = {x: 0, y: 0};
 
-            let pt0 = pgnvxCoords(pgnvxNdx -1, ops.objects.vxCount);  
+            
 
-            let pt1 = pgnvxCoords(pgnvxNdx, ops.objects.vxCount); 
+            let pt0 = pgnvxCoords(pgnvxNdx -1, ph);  
+
+            let pt1 = pgnvxCoords(pgnvxNdx, ph); 
 
             ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)]   = ctr.x;
             ops.objects.unif.vxCoords.data[3*2*(pgnvxNdx)+1] = ctr.y;
@@ -241,6 +249,41 @@ const polygone_bindgroup = (params = {context:{}}) => {
         }
 
 
+        let ctr = {x: 0, y: 0};
+
+        let last = ops.objects.edgCount -1
+
+        let pt0 = pgnvxCoords(last , ph);  
+
+        let pt1 = pgnvxCoords(0, ph); 
+
+        ops.objects.unif.vxCoords.data[3*2*(last)]   = ctr.x;
+        ops.objects.unif.vxCoords.data[3*2*(last)+1] = ctr.y;
+
+        ops.objects.unif.vxCoords.data[3*2*(last)+2] = pt0.x;
+        ops.objects.unif.vxCoords.data[3*2*(last)+3] = pt0.y;
+
+        ops.objects.unif.vxCoords.data[3*2*(last)+4] = pt1.x;
+        ops.objects.unif.vxCoords.data[3*2*(last)+5] = pt1.y;
+
+
+        let color1 =  [0.2, 0.8, 0.5];
+
+        let color2 =  [0.6, 0.1, 0.1]; 
+
+        let color3 =  [0.1, 0.1, 0.6];
+
+        ops.objects.unif.vxColors.data[3*3*(last)]   = color1[0];
+        ops.objects.unif.vxColors.data[3*3*(last)+1] = color1[1];
+        ops.objects.unif.vxColors.data[3*3*(last)+2] = color1[2];
+
+        ops.objects.unif.vxColors.data[3*3*(last)+3] = color2[0];
+        ops.objects.unif.vxColors.data[3*3*(last)+4] = color2[1];
+        ops.objects.unif.vxColors.data[3*3*(last)+5] = color2[2];
+
+        ops.objects.unif.vxColors.data[3*3*(last)+6] = color3[0];
+        ops.objects.unif.vxColors.data[3*3*(last)+7] = color3[1];
+        ops.objects.unif.vxColors.data[3*3*(last)+8] = color3[2];
 
 
         console.log(ops.objects.unif  )
@@ -356,7 +399,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
        
           vertexOut.pos = vec4f( mat_translation*vertex, 1.0);
 
-          vertexOut.color = vec4f( color_blendMULT(insce_colors[ii], geovx_colors[vi] ), 1.0);
+          vertexOut.color = vec4f( color_blendSCREEN(insce_colors[ii], geovx_colors[vi] ), 1.0);
           
           //vertexOut.color = vec4f( insce_colors[ii], 1.0);
 
