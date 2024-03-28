@@ -123,11 +123,11 @@ const polygone_bindgroup = (params = {context:{}}) => {
     // Initialiser les structures de données. 
     ops.iniDataStructures = () => {
 
-        ops.objects.edgCount =  Ebk.Rand.iRanges({ranges:[[4., 12]], clamps:[[0,1]]})   
+        ops.objects.edgCount = 7// Ebk.Rand.iRanges({ranges:[[4., 12]], clamps:[[0,1]]})   
         ops.objects.vxCount = 3 * ops.objects.edgCount;
-        ops.objects.count = 3;
-        ops.objects.mag = 0.3;
-        ops.objects.phase = 0.17;
+        ops.objects.count = 30;
+        ops.objects.mag = 0.13;
+        ops.objects.phase = Ebk.Rand.fRanges({ranges:[[0., 3.14]], clamps:[[0,1]]})  ;
 
         ops.objects.attr = {};
         ops.objects.attr.coords = {};
@@ -137,13 +137,15 @@ const polygone_bindgroup = (params = {context:{}}) => {
         ops.objects.unif.vxColors = {};
         ops.objects.unif.insceOffsets  = {};
         ops.objects.unif.insceColors   = {};
-
+        ops.objects.unif.vxCount  = {};
+        ops.objects.unif.insceVxCoords  = {};
 
         ops.objects.unif.vxCoords.data = new Float32Array(2*ops.objects.vxCount);
         ops.objects.unif.vxColors.data = new Float32Array(3*ops.objects.vxCount);
         ops.objects.unif.insceOffsets.data  = new Float32Array(2*ops.objects.count);
         ops.objects.unif.insceColors.data   = new Float32Array(3*ops.objects.count);
-
+        ops.objects.unif.vxCount.data            = new Uint16Array([2*ops.objects.vxCount]);
+        ops.objects.unif.insceVxCoords.data   = new Float32Array(3*ops.objects.count*2*ops.objects.vxCount);
  
     }
 
@@ -294,6 +296,143 @@ const polygone_bindgroup = (params = {context:{}}) => {
                  
     }
 
+    ops.iniGeometryExtend = (instance) => {
+
+        let pgnVxNdx = (edgndx) => {
+           return   Ebk.Sequence.GridWholeNumber.dataGetSum({step:edgndx});
+        }
+
+        let cirAngle = (cirNdx, cirNdxMax, ph = 0.99 ) => {
+           
+           // let ph = Ebk.Rand.fRanges({ranges:[[0., 0.3]], clamps:[[0,1]]}) 
+
+            return ph + 2*Math.PI* (cirNdx) / (cirNdxMax-1)
+        }
+
+        let pgnAngle = (edgndx, ph = 0.99  ) => {
+            return  cirAngle(pgnVxNdx(edgndx), pgnVxNdx(ops.objects.edgCount), ph); 
+        }
+
+        let pgnvxCoords  = (pgnvxNdx, ph = 0.99 ) => {
+
+            let angle = pgnAngle(pgnvxNdx, ph);
+            let ray   = ops.objects.mag;
+
+            return { x :  ray*Math.cos(angle) , y:  ray*Math.sin(angle) }
+        }
+
+
+        let geoAngle = (vi, vxCount) => {
+            return 2*Math.PI* (vi) / (vxCount-1)
+        }
+
+
+        let geoRay  = (vi, vxCount, ph, mag) => {
+            return mag * vi * 0.1 // Math.sin(geoAngle(vi, vxCount, ph));
+        }
+
+        let geovxCoords  = (vi, vxCount ) => {
+
+            let angle = geoAngle(vi, vxCount,  ops.objects.phase);
+            let ray   = geoRay(vi, vxCount,  ops.objects.phase, ops.objects.mag );
+
+            return { x :  ray*Math.cos(angle) , y:  ray*Math.sin(angle) }
+        }
+
+        let ph = Ebk.Rand.fRanges({ranges:[[0., 5.3]], clamps:[[0,1]]});
+
+        let jump = instance*ops.objects.vxCount;
+
+
+
+        for (let pgnvxNdx = 1; pgnvxNdx < ops.objects.edgCount; pgnvxNdx++) {
+
+
+
+            let ctr = {x: 0, y: 0};
+
+            
+
+            let pt0 = pgnvxCoords(pgnvxNdx -1, ph);  
+
+            let pt1 = pgnvxCoords(pgnvxNdx, ph); 
+
+            ops.objects.unif.insceVxCoords.data[jump + 3*2*(pgnvxNdx)]   = ctr.x;
+            ops.objects.unif.insceVxCoords.data[jump + 3*2*(pgnvxNdx)+1] = ctr.y;
+
+            ops.objects.unif.insceVxCoords.data[jump + 3*2*(pgnvxNdx)+2] = pt0.x;
+            ops.objects.unif.insceVxCoords.data[jump + 3*2*(pgnvxNdx)+3] = pt0.y;
+
+            ops.objects.unif.insceVxCoords.data[jump + 3*2*(pgnvxNdx)+4] = pt1.x;
+            ops.objects.unif.insceVxCoords.data[jump + 3*2*(pgnvxNdx)+5] = pt1.y;
+
+            let color1 =  [0.2, 0.8, 0.5];
+
+            let color2 =  [0.6, 0.1, 0.1]; 
+
+            let color3 =  [0.1, 0.1, 0.6];
+
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)]   = color1[0];
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+1] = color1[1];
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+2] = color1[2];
+
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+3] = color2[0];
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+4] = color2[1];
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+5] = color2[2];
+
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+6] = color3[0];
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+7] = color3[1];
+            ops.objects.unif.insceVxCoords.data[jump + 3*3*(pgnvxNdx)+8] = color3[2];
+
+ 
+        }
+
+
+        let ctr = {x: 0, y: 0};
+
+        let last = ops.objects.edgCount -1
+
+        let pt0 = pgnvxCoords(last , ph);  
+
+        let pt1 = pgnvxCoords(0, ph); 
+
+        ops.objects.unif.insceVxCoords.data[jump + 3*2*(last)]   = ctr.x;
+        ops.objects.unif.insceVxCoords.data[jump + 3*2*(last)+1] = ctr.y;
+
+        ops.objects.unif.insceVxCoords.data[jump + 3*2*(last)+2] = pt0.x;
+        ops.objects.unif.insceVxCoords.data[jump + 3*2*(last)+3] = pt0.y;
+
+        ops.objects.unif.insceVxCoords.data[jump + 3*2*(last)+4] = pt1.x;
+        ops.objects.unif.insceVxCoords.data[jump + 3*2*(last)+5] = pt1.y;
+
+
+        let color1 =  [0.2, 0.8, 0.5];
+
+        let color2 =  [0.6, 0.1, 0.1]; 
+
+        let color3 =  [0.1, 0.1, 0.6];
+
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)]   = color1[0];
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+1] = color1[1];
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+2] = color1[2];
+
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+3] = color2[0];
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+4] = color2[1];
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+5] = color2[2];
+
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+6] = color3[0];
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+7] = color3[1];
+        ops.objects.unif.insceVxCoords.data[jump + 3*3*(last)+8] = color3[2];
+
+
+    
+
+               
+
+             
+                 
+    }
+
     ops.iniInstancesOffsetsAndColor = () => {
         
 
@@ -306,7 +445,11 @@ const polygone_bindgroup = (params = {context:{}}) => {
             ops.objects.unif.insceColors.data[3*ii + 1] = Ebk.Rand.fRanges({ranges:[[0.2,1.]], clamps:[[0,1]]});
             ops.objects.unif.insceColors.data[3*ii + 2] = Ebk.Rand.fRanges({ranges:[[0.2,1.]], clamps:[[0,1]]});
 
+            ops.iniGeometryExtend( ii);
+
         }
+
+        console.log(ops.objects.unif  )
 
     }    
  
@@ -374,6 +517,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
             return  (colorA + colorB) / 2;
         }
 
+
         struct VertexOut {
             @builtin(position) pos: vec4f, 
             @location(0) color: vec4f, 
@@ -383,8 +527,10 @@ const polygone_bindgroup = (params = {context:{}}) => {
         @group(0) @binding(1) var <storage> geovx_colors:  array<vec3f>;
         @group(0) @binding(2) var <storage> insce_offsets: array<vec2f>;
         @group(0) @binding(3) var <storage> insce_colors:  array<vec3f>;
-      
+        @group(0) @binding(4) var <storage> vxCount: u32;
+        @group(0) @binding(5) var <storage> insce_geovx_coords: array<vec2f>;
 
+      
         @vertex fn vs(@builtin(instance_index) ii: u32, @builtin(vertex_index) vi: u32)-> VertexOut {
 
           var vertexOut : VertexOut; 
@@ -397,7 +543,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
 
           var vertex = vec3f(geovx_coords[vi], 0);
        
-          vertexOut.pos = vec4f( mat_translation*vertex, 1.0);
+          vertexOut.pos = vec4f( insce_offsets[ii]+ geovx_coords[vi],0.0 , 1.0);
 
           vertexOut.color = vec4f( color_blendSCREEN(insce_colors[ii], geovx_colors[vi] ), 1.0);
           
@@ -408,7 +554,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
         }
 
         @fragment fn fs(@location(0) color: vec4f) -> @location(0) vec4f {
-           return color;
+           return  vec4f( 1., 0.8, 0, 1.0); //color;
         }
      
      ` ;
@@ -498,6 +644,25 @@ const polygone_bindgroup = (params = {context:{}}) => {
                         type: "read-only-storage"
                     }
                 } 
+
+                , 
+
+                {
+                    binding: 4, 
+                    visibility: GPUShaderStage.VERTEX, 
+                    buffer: {
+                        type: "read-only-storage"
+                    }
+                } 
+                , 
+
+                {
+                    binding: 5, 
+                    visibility: GPUShaderStage.VERTEX, 
+                    buffer: {
+                        type: "read-only-storage"
+                    }
+                } 
             ]
         });
 
@@ -566,6 +731,24 @@ const polygone_bindgroup = (params = {context:{}}) => {
         ops.env.device.queue.writeBuffer( ops.objects.unif.insceColors.buffer, 0, ops.objects.unif.insceColors.data);
 
 
+        ops.objects.unif.vxCount.buffer = ops.env.device.createBuffer({
+            size:  ops.objects.unif.vxCount.data.byteLength*2, 
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+
+        });
+
+        ops.env.device.queue.writeBuffer(  ops.objects.unif.vxCount.buffer, 0, ops.objects.unif.vxCount.data);
+
+
+        ops.objects.unif.insceVxCoords.buffer = ops.env.device.createBuffer({
+            size:  ops.objects.unif.insceVxCoords.data.byteLength, 
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+
+        });
+
+        ops.env.device.queue.writeBuffer(  ops.objects.unif.insceVxCoords.buffer, 0, ops.objects.unif.insceVxCoords.data);
+
+
         ops.objects.vxCount = 3 * ops.objects.edgCount;
 
         ops.env.bindGroup = ops.env.device.createBindGroup({
@@ -594,8 +777,19 @@ const polygone_bindgroup = (params = {context:{}}) => {
                     resource: {
                       buffer:  ops.objects.unif.insceColors.buffer, offset: 0, size: 4*3*ops.objects.count
                     }
-                  } ,
-                                                               
+                } ,
+                {
+                    binding: 4, 
+                    resource: {
+                      buffer:  ops.objects.unif.vxCount.buffer, offset: 0, size: 4
+                    }
+                } ,
+                {
+                    binding: 0, 
+                    resource: {
+                      buffer:  ops.objects.unif.vxCoords.buffer, offset: 0, size: 4*2*ops.objects.vxCount*ops.objects.count
+                    }
+                }                                                
             
             ]
         });
@@ -625,7 +819,7 @@ const polygone_bindgroup = (params = {context:{}}) => {
         let passEncoder = commandEncoder.beginRenderPass(renderPassDesc);
         passEncoder.setPipeline(ops.env.pipeline);
         passEncoder.setBindGroup(0, ops.env.bindGroup); 
-        passEncoder.draw(3*ops.objects.vxCount, ops.objects.count);
+        passEncoder.draw(ops.objects.vxCount, ops.objects.count);
         passEncoder.end();
 
         let commandBuffer = commandEncoder.finish();
