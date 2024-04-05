@@ -53,7 +53,16 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.obj = new   Ebk.Geometry.Polygon({beltVtxCount: 16})
             console.log(ops.objects.obj.belt(5), ops.objects.obj.cirFndVtxCount)
 
-            Ebk.Geometry.Polygon.ClassModelTests();
+            Ebk.Geometry.Polygon.ClassModelTests([
+    
+                {
+                    creation:  { beltVtxCount: 6, beltNdx :1,  phase:0 } , 
+            
+                    update:  { beltVtxCount: 6, beltNdx :5,   phase:0 }  , 
+                
+                }
+                
+                ] );
         }
     
     

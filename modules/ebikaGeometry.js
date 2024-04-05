@@ -25,17 +25,15 @@ Ebk.Geometry.Polygon = class EbkGeometryPolygon {
         this.#params =  Object.assign({},  params );
         this.#cirFndVtxCountGen();
 
-     
+  
     }
     
     _update(params = { beltVtxCount: 6 }){
         
         this.#params =  Object.assign(this.#params,  params );
         this.#cirFndVtxCountGen(); 
-        
-        
+                
     }
-
 
 
     getParams(){
@@ -56,18 +54,48 @@ Ebk.Geometry.Polygon = class EbkGeometryPolygon {
          return {x : Math.cos(angle), y: Math.sin(angle)};
     }
 
-    coords( params = {ndx : 0, phase:0}) {
-        return this.#circleCoords(this.belt({beltNdx: params.ndx}), params.phase );
+    coords( params = {beltNdx : 0, phase:0}) {
+        return this.#circleCoords(this.belt({beltNdx: params.beltNdx}), params.phase );
     }
 
+    vtxCount( ) {
+        return {indexed: this.#params.beltVtxCount + 1, uIndexed: this.#params.beltVtxCount * 3  }
+    }
+
+    #compOfDataUindexed( params = {beltNdx : 0, phase:0}) {
+         
+        let curr = {}, next = {}, ctr = {x: 0, y: 0};
+
+        curr =  this.coords({beltNdx : params.beltNdx, phase: params.phase});
+
+        if (params.beltNdx < this.#params.beltVtxCount -1) {
+            next =  this.coords({beltNdx : params.beltNdx + 1, phase: params.phase});
+        } else {
+
+            next =  this.coords({beltNdx : 0, phase: params.phase});
+        }
+
+        return { curr, next, ctr}
+    }
+
+    #compOfDataIndexed( params = {beltNdx : 0, phase:0}) {
+        let curr = {},  ctr = {x: 0, y: 0};
+        curr =  this.coords({beltNdx : params.beltNdx, phase: params.phase});
+        return { curr, ctr} 
+    }
+
+    compOfData( params = {beltNdx : 0, phase:0}) {
+        return {indexed: this.#compOfDataUindexed({beltNdx : params.beltNdx, phase: params.phase}),
+                uIndexed: this.#compOfDataIndexed({beltNdx : params.beltNdx, phase: params.phase})  }
+    }
 }  
 
 Ebk.Geometry.Polygon.ClassModelTests = (paramsTestOptions =[
     
     {
-        creation:  { beltVtxCount: 6, beltNdx :0, ndx : 0, phase:0 } , 
+        creation:  { beltVtxCount: 6, beltNdx :0,  phase:0 } , 
 
-        update:  { beltVtxCount: 6, beltNdx :0, ndx : 0, phase:0 }  , 
+        update:  { beltVtxCount: 6, beltNdx :0,  phase:0 }  , 
     
     }
     
