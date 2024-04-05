@@ -11,7 +11,7 @@
 
 
 
-import { polygone_bindgroup} from "./polygone_bindgroup.js";
+import { polygone_storageUploadToGPU} from "./polygone_bindgroup.js";
 import { squareInGrid} from "./squareInGrid.js";
 import { square} from "./square.js";
 import { circlesTriangleStripRandomAttributes} from "./circlesTriangleStripRandomAttributes.js";
@@ -48,7 +48,7 @@ let projects = {};
  
  projects.entries = [
 
-  polygone_bindgroup(projects.paramsIn),
+  polygone_storageUploadToGPU(projects.paramsIn),
   squareInGrid(projects.paramsIn),
   square(projects.paramsIn),
   circlesTriangleStripRandomAttributes(projects.paramsIn),
