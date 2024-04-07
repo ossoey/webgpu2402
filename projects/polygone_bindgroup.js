@@ -53,20 +53,20 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
 
     
-            ops.objects.obj = new   Ebk.Geometry.Polygon({beltVtxCount: 16});
+            ops.objects.obj = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 16, instanceCount: 10,colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
             ops.objects.stor.coords = {};
 
-            ops.objects.stor.coords.data =  ops.objects.obj.create_bufferCoordsRecordsUIndexed({phase: 0});
+            ops.objects.stor.coords.data =  ops.objects.obj.create_buffersData({phase: 0});
 
             console.log(ops.objects.stor.coords.data)
 
             // Ebk.Geometry.Polygon.ClassModelTests([
     
             //     {
-            //         creation:  { beltVtxCount: 6, beltNdx :1,  phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  } } , 
+            //         creation:  { beltVtxCount: 6, beltNdx :1,  phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } } , 
             
-            //         update:  { beltVtxCount: 9, beltNdx :5,   phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  } }  , 
+            //         update:  { beltVtxCount: 9, beltNdx :5,   phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } }  , 
                 
             //     }
                 
