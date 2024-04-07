@@ -11,12 +11,12 @@ Ebk.Geometry = {};
 
 
 /////// Ebk.ClassModel
-Ebk.Geometry.Polygon = class EbkGeometryPolygon {
+Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
     #params;
     #process;
   
     
-    constructor(params ={ beltVtxCount: 6, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  }  }) {
+    constructor(params ={ beltVtxCount: 6, instanceCount: 10, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  }  }) {
                
         this.name = `Ebk.Geometry.Polygon`;            
                     
@@ -24,18 +24,18 @@ Ebk.Geometry.Polygon = class EbkGeometryPolygon {
         
         this.#params =  Object.assign({},  params );
         
-        this.buffers = {};
+        this.buffersData = {};
 
         this.#cirFndVtxCountGen();
 
   
     }
     
-    _update(params = { beltVtxCount: 6, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  } }){
+    _update(params = { beltVtxCount: 6, instanceCount: 10,  colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } }){
         
         this.#params =  Object.assign(this.#params,  params );
         this.#cirFndVtxCountGen(); 
-                
+         
     }
 
 
@@ -43,6 +43,10 @@ Ebk.Geometry.Polygon = class EbkGeometryPolygon {
         return Object.assign({},Ebk.objectDeepCopy (this.#params));
     }
 
+    vtxCount( ) {
+        return this.#params.beltVtxCount * 3;
+    }
+ 
     belt(params = {beltNdx :0}){
         return Ebk.Sequence.GridWholeNumber.dataGetSum({step:params.beltNdx}); 
     }
@@ -61,11 +65,23 @@ Ebk.Geometry.Polygon = class EbkGeometryPolygon {
         return this.#circleCoords(this.belt({beltNdx: params.beltNdx}), params.phase );
     }
 
-    vtxCount( ) {
-        return {indexed: this.#params.beltVtxCount + 1, uIndexed: this.#params.beltVtxCount * 3  }
+    colorRand( ) {
+        let r =  Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[0], this.#params.colors.end[0]]], clamps:[[0,1]]});
+        let g =  Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[1], this.#params.colors.end[1]]], clamps:[[0,1]]});  
+        let b =  Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[2], this.#params.colors.end[2]]], clamps:[[0,1]]}); 
+
+        return {r, g, b};
     }
 
-    #coordsRecordUindexed( params = {beltNdx : 0, phase:0}) {
+    offsetsRand() {
+        let x =  Ebk.Rand.fRanges({ranges:[[this.#params.offsets.width[0], this.#params.offsets.width[1]]], clamps:[[0,1]]});
+        let y =  Ebk.Rand.fRanges({ranges:[[this.#params.offsets.height[0], this.#params.offsets.height[1]]], clamps:[[0,1]]}); 
+       
+        return {x, y};
+    }
+
+
+    coordsRecord( params = {beltNdx : 0}) {
          
         let curr = {}, next = {}, ctr = {x: 0, y: 0};
 
@@ -81,69 +97,89 @@ Ebk.Geometry.Polygon = class EbkGeometryPolygon {
         return { curr, next, ctr}
     }
 
-    #coordsRecordIndexed( params = {beltNdx : 0, phase:0}) {
-        let curr = {},  ctr = {x: 0, y: 0};
-        curr =  this.coords({beltNdx : params.beltNdx, phase: params.phase});
-        return { curr, ctr} 
+    colorRandRecord() {
+         
+        let curr = this.colorRand(), next = this.colorRand(), ctr = this.colorRand();
+
+        return { curr, next, ctr}
     }
 
-    coordsRecord( params = {beltNdx : 0, phase:0}) {
-        return {uIndexed : this.#coordsRecordUindexed({beltNdx : params.beltNdx, phase: params.phase}),
-                indexed: this.#coordsRecordIndexed({beltNdx : params.beltNdx, phase: params.phase})  }
+
+    #create_bufferDataCoordsRecords(buffer, beltNdx = 0,  phase = 0) {
+
+        let record = this.coordsRecord(  {beltNdx : beltNdx, phase: phase});
+
+        buffer[3*2*beltNdx] = record.curr.x; 
+        buffer[3*2*beltNdx +1 ] = record.curr.y; 
+
+        buffer[3*2*beltNdx +2 ] = record.next.x; 
+        buffer[3*2*beltNdx +3 ] = record.next.y; 
+
+        buffer[3*2*beltNdx +4 ] = record.ctr.x; 
+        buffer[3*2*beltNdx +5 ] = record.ctr.y; 
     }
 
-    create_bufferCoordsRecordsUIndexed( params = { phase:0}) {
+    #create_bufferDataColorRandRecords(buffer,  beltNdx) {
 
-        this.buffers.coordsRecordsUIndexed = new Float32Array(this.vtxCount().uIndexed*2);  
+        let record = this.colorRandRecord();
 
-        for(let coordsRecordNdx = 0; coordsRecordNdx < this.#params.beltVtxCount; coordsRecordNdx ++ ) {
-            let record = this.coordsRecord(  {beltNdx : coordsRecordNdx, phase: params.phase}).uIndexed;
+        buffer[3*3*beltNdx] = record.curr.r; 
+        buffer[3*3*beltNdx +1 ] = record.curr.g; 
+        buffer[3*3*beltNdx +2 ] = record.curr.b; 
 
+        buffer[3*3*beltNdx + 3] = record.next.r; 
+        buffer[3*3*beltNdx + 4] = record.next.g; 
+        buffer[3*3*beltNdx + 5] = record.next.b; 
 
-            this.buffers.coordsRecordsUIndexed[3*2*coordsRecordNdx] = record.curr.x; 
-            this.buffers.coordsRecordsUIndexed[3*2*coordsRecordNdx +1 ] = record.curr.y; 
+        buffer[3*3*beltNdx + 6] = record.ctr.r; 
+        buffer[3*3*beltNdx + 7] = record.ctr.g; 
+        buffer[3*3*beltNdx + 8] = record.ctr.b; 
 
-            this.buffers.coordsRecordsUIndexed[3*2*coordsRecordNdx +2 ] = record.next.x; 
-            this.buffers.coordsRecordsUIndexed[3*2*coordsRecordNdx +3 ] = record.next.y; 
+    }
 
-            this.buffers.coordsRecordsUIndexed[3*2*coordsRecordNdx +4 ] = record.ctr.x; 
-            this.buffers.coordsRecordsUIndexed[3*2*coordsRecordNdx +5 ] = record.ctr.y; 
+    #create_bufferDataOffsetsRecords(buffer, instanceNdx  ) {
+
+        let record = this.offsetsRand();
+
+        buffer[2*instanceNdx] = record.x; 
+        buffer[2*instanceNdx +1 ] = record.y; 
+    }
+
+    create_buffersData( params = { phase:0}) {
+
+        this.buffersData.coordsRecords = new Float32Array(this.vtxCount()*2);  
+        this.buffersData.colorRandRecords = new Float32Array(this.vtxCount()*3); 
+        this.buffersData.offsetsRandRecords = new Float32Array(this.#params.instanceCount*2);  
+
+        for(let beltNdx = 0; beltNdx < this.#params.beltVtxCount; beltNdx ++ ) {
+              
+            this.#create_bufferDataCoordsRecords(this.buffersData.coordsRecords, beltNdx,  params.phase);
+            this.#create_bufferDataColorRandRecords(this.buffersData.colorRandRecords, beltNdx);
 
         }
 
-        return this.buffers.coordsRecordsUIndexed; 
+        for(let instanceNdx = 0; instanceNdx < this.#params.instanceCount; instanceNdx ++ ) {
+              
+            this.#create_bufferDataOffsetsRecords(  this.buffersData.offsetsRandRecords, instanceNdx  )
+
+        }
+
+        return { coordsRecords: this.buffersData.coordsRecords, 
+                 colorRandRecords: this.buffersData.colorRandRecords,
+                  offsetsRandRecords:   this.buffersData.offsetsRandRecords}; 
    }
 
-   create_bufferCoordsRecordsIndexed( params = { phase:0}) {
 
-    // this.buffers.coordsRecordsIndexed = new Float32Array(2*(this.vtxCount().indexed+1));  
-
-    // let record; 
-
-    // for(let coordsRecordNdx = 0; coordsRecordNdx < this.#params.beltVtxCount; coordsRecordNdx ++ ) {
-    //     record = this.coordsRecord(  {beltNdx : coordsRecordNdx, phase: params.phase}).indexed;
-
-    //     this.buffers.coordsRecordsIndexed[2*coordsRecordNdx] = record.curr.x; 
-    //     this.buffers.coordsRecordsIndexed[2*coordsRecordNdx +1 ] = record.curr.y; 
-
-    // }
-
-    // this.buffers.coordsRecordsIndexed[2*this.#params.beltVtxCount - 2] = record.ctr.x; 
-    // this.buffers.coordsRecordsIndexed[2*this.#params.beltVtxCount - 1 ] = record.ctr.y; 
-
-
-    // return this.buffers.coordsRecordsIndexed; 
-}
                 
    
 }  
 
-Ebk.Geometry.Polygon.ClassModelTests = (paramsTestOptions =[
+Ebk.Geometry.PolygonVtxUindexed.ClassModelTests = (paramsTestOptions =[
     
     {
-        creation:  { beltVtxCount: 6, beltNdx :0,  phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  } } , 
+        creation:  { beltVtxCount: 6, instanceCount: 10, beltNdx :0,  phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } } , 
 
-        update:  { beltVtxCount: 6, beltNdx :0,  phase:0 , colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } }  , 
+        update:  { beltVtxCount: 6, instanceCount: 10, beltNdx :0,  phase:0 , colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } }  , 
     
     }
     
@@ -151,7 +187,7 @@ Ebk.Geometry.Polygon.ClassModelTests = (paramsTestOptions =[
        
 )=>{
 
-    Ebk.ObjectInstance.testsCreateAndUpdate(Ebk.Geometry.Polygon, paramsTestOptions, exceptions );
+    Ebk.ObjectInstance.testsCreateAndUpdate(Ebk.Geometry.PolygonVtxUindexed , paramsTestOptions, exceptions );
 
 }
 
