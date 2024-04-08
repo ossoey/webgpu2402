@@ -51,50 +51,61 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         ops.iniDataStructures = () => {
 
             ops.objects.stor = {};
-
+            ops.objects.geometry = {};
     
-            ops.objects.obj = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 16, instanceCount: 10,colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 6, instanceCount: 30,colors: {start: [0.5, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+
+            ops.objects.geometry.polygon.create_buffersData({phase: -0.63});
+            ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
+            ops.objects.count = ops.objects.geometry.polygon.instanceCount();
+            
 
             ops.objects.stor.coords = {};
+            ops.objects.stor.colors = {};
+            ops.objects.stor.offsets = {};
 
-            ops.objects.stor.coords.data =  ops.objects.obj.create_buffersData({phase: 0});
+            ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
+            ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
+            ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
 
-            console.log(ops.objects.stor.coords.data)
+ 
 
-            // Ebk.Geometry.Polygon.ClassModelTests([
-    
-            //     {
-            //         creation:  { beltVtxCount: 6, beltNdx :1,  phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } } , 
-            
-            //         update:  { beltVtxCount: 9, beltNdx :5,   phase:0, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } }  , 
-                
-            //     }
-                
-            //     ] );
+            console.log(ops.objects.geometry.polygon.buffersData, ops.objects.stor)
+
+
         }
     
     
         // initialiser les données 
         ops.iniData = () => {
             ops.env.shaderCode = `
-            
-    
-               @vertex fn vs(@builtin(vertex_index) vertexIndex : u32)-> @builtin(position) vec4f {
-    
-                 var pos = array(
-                    vec2f(-0.9, -0.6), 
-                    vec2f( 0.9, -0.6), 
-                    vec2f( 0.0, 0.8), 
-                  ); 
-    
-    
-                 return vec4f(pos[vertexIndex], 0.0, 1.0);
-    
+
+
+               @group(0) @binding(0) var <storage> coords: array<vec2f>;
+               @group(0) @binding(1) var <storage> colors: array<vec3f>;
+               @group(0) @binding(2) var <storage> offsets: array<vec2f>;
+
+               struct VertexTransfer {
+
+                 @builtin(position) pos : vec4f, 
+                 @location(0) color: vec4f
+
                }
+               
+               @vertex fn vs(@builtin(instance_index) ii : u32, @builtin(vertex_index) vi : u32)-> VertexTransfer {
     
-               @fragment fn fs() -> @location(0) vec4f {
-                  return vec4f(1.0, 0, 0, 1);
-               }
+                 var output : VertexTransfer;
+                 
+                 output.pos = vec4f(  0.1*coords[vi] + offsets[ii] ,0, 1);
+                 output.color = vec4f(colors[vi], 1);
+                 
+                 return output; 
+
+              }
+    
+              @fragment fn fs(@location(0) color : vec4f) -> @location(0) vec4f {
+                  return color;
+              }
             
             ` ;
         }
@@ -131,10 +142,46 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // configurer le pipeline
         ops.configPipeline = () => {
+
+            ops.env.bindGroupLayout = ops.env.device.createBindGroupLayout({
+               
+                entries: [
+                    { // coords
+                        binding: 0 , 
+                        visibility: GPUShaderStage.VERTEX, 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
+                    {  // colors
+                        binding: 1 , 
+                        visibility: GPUShaderStage.VERTEX, 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
+
+                    {    // offsets
+                        binding: 2 , 
+                        visibility: GPUShaderStage.VERTEX, 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
+
+
+                
+                ]
+            });
     
             let pipelineDesc = {
     
-                layout: "auto", 
+                layout: ops.env.device.createPipelineLayout({
+                    bindGroupLayouts: [ ops.env.bindGroupLayout]
+                }), 
     
                 vertex: {
                     module: ops.env.shaderModule, 
@@ -154,8 +201,58 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 }
             }
     
-    
             ops.env.pipeline = ops.env.device.createRenderPipeline(pipelineDesc);
+
+            ops.objects.stor.coords.buffer =  ops.env.device.createBuffer(
+                {
+                    label: `Buffer coords${ops.desc}`, 
+                    size: ops.objects.stor.coords.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.coords.buffer , 0 , ops.objects.stor.coords.data);
+
+            ops.objects.stor.colors.buffer = ops.env.device.createBuffer(
+                {
+                    label: `Buffer colors${ops.desc}`, 
+                    size: ops.objects.stor.colors.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.colors.buffer , 0 , ops.objects.stor.colors.data);
+
+            ops.objects.stor.offsets.buffer =  ops.env.device.createBuffer(
+                {
+                    label: `Buffer offsets${ops.desc}`, 
+                    size: ops.objects.stor.offsets.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.offsets.buffer , 0 , ops.objects.stor.offsets.data);
+
+            ops.env.bindGroup = ops.env.device.createBindGroup({
+                layout: ops.env.bindGroupLayout,
+                entries: [ 
+                  {
+                     binding: 0, // Corresponds to the binding 0 in the layout.
+                     resource: { buffer:  ops.objects.stor.coords.buffer, offset: 0, size: ops.objects.vtxCount*4*2}
+                  } , 
+                  {
+                    binding: 1, // Corresponds to the binding 0 in the layout.
+                    resource: { buffer:  ops.objects.stor.colors.buffer, offset: 0, size: ops.objects.vtxCount*4*3}
+                  } , 
+                  {
+                    binding: 2, // Corresponds to the binding 0 in the layout.
+                    resource: { buffer:  ops.objects.stor.offsets.buffer, offset: 0, size: ops.objects.count*4*2}
+                  } , 
+
+                ]
+             });
+
+
             
         }
     
@@ -177,7 +274,8 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             let commandEncoder = ops.env.device.createCommandEncoder();
             let passEncoder = commandEncoder.beginRenderPass(renderPassDesc);
             passEncoder.setPipeline(ops.env.pipeline);
-            passEncoder.draw(3);
+            passEncoder.setBindGroup(0, ops.env.bindGroup);
+            passEncoder.draw(ops.objects.vtxCount, ops.objects.count);
             passEncoder.end();
     
             let commandBuffer = commandEncoder.finish();

@@ -46,6 +46,10 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
     vtxCount( ) {
         return this.#params.beltVtxCount * 3;
     }
+
+    instanceCount( ) {
+        return this.#params.instanceCount;
+    }
  
     belt(params = {beltNdx :0}){
         return Ebk.Sequence.GridWholeNumber.dataGetSum({step:params.beltNdx}); 
@@ -56,7 +60,7 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
     }
 
     #circleCoords(cirNdx, phase = 0){
-        let angle = phase + 2 * Math.PI * (cirNdx/ this.cirFndVtxCount-1);
+        let angle = phase + 2 * Math.PI * (cirNdx/ (this.cirFndVtxCount-1));
           
          return {x : Math.cos(angle), y: Math.sin(angle)};
     }
@@ -135,6 +139,9 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
         buffer[3*3*beltNdx + 7] = record.ctr.g; 
         buffer[3*3*beltNdx + 8] = record.ctr.b; 
 
+     
+
+
     }
 
     #create_bufferDataOffsetsRecords(buffer, instanceNdx  ) {
@@ -147,30 +154,28 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
 
     create_buffersData( params = { phase:0}) {
 
-        this.buffersData.coordsRecords = new Float32Array(this.vtxCount()*2);  
-        this.buffersData.colorRandRecords = new Float32Array(this.vtxCount()*3); 
-        this.buffersData.offsetsRandRecords = new Float32Array(this.#params.instanceCount*2);  
+        this.buffersData.coords = new Float32Array(this.vtxCount()*2);  
+        this.buffersData.colors = new Float32Array(this.vtxCount()*3); 
+        this.buffersData.offsets = new Float32Array(this.#params.instanceCount*2);  
+        
 
         for(let beltNdx = 0; beltNdx < this.#params.beltVtxCount; beltNdx ++ ) {
               
-            this.#create_bufferDataCoordsRecords(this.buffersData.coordsRecords, beltNdx,  params.phase);
-            this.#create_bufferDataColorRandRecords(this.buffersData.colorRandRecords, beltNdx);
+            this.#create_bufferDataCoordsRecords(this.buffersData.coords, beltNdx,  params.phase);
+            this.#create_bufferDataColorRandRecords(this.buffersData.colors, beltNdx);
 
         }
 
+     
+        
         for(let instanceNdx = 0; instanceNdx < this.#params.instanceCount; instanceNdx ++ ) {
               
-            this.#create_bufferDataOffsetsRecords(  this.buffersData.offsetsRandRecords, instanceNdx  )
+            this.#create_bufferDataOffsetsRecords(  this.buffersData.offsets, instanceNdx  )
 
         }
 
-        return { coordsRecords: this.buffersData.coordsRecords, 
-                 colorRandRecords: this.buffersData.colorRandRecords,
-                  offsetsRandRecords:   this.buffersData.offsetsRandRecords}; 
    }
 
-
-                
    
 }  
 
