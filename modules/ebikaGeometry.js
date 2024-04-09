@@ -28,6 +28,8 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
 
         this.#cirFndVtxCountGen();
 
+        this.beltCtr = {x: 0, y: 0};
+
   
     }
     
@@ -35,6 +37,7 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
         
         this.#params =  Object.assign(this.#params,  params );
         this.#cirFndVtxCountGen(); 
+        this.beltCtr = {x: 0, y: 0};
          
     }
 
@@ -72,7 +75,7 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
     colorRand( ) {
         let r =  Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[0], this.#params.colors.end[0]]], clamps:[[0,1]]});
         let g =  Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[1], this.#params.colors.end[1]]], clamps:[[0,1]]});  
-        let b =  Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[2], this.#params.colors.end[2]]], clamps:[[0,1]]}); 
+        let b = Ebk.Rand.fRanges({ranges:[[this.#params.colors.start[2], this.#params.colors.end[2]]], clamps:[[0,1]]}); 
 
         return {r, g, b};
     }
@@ -84,6 +87,24 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
         return {x, y};
     }
 
+    coordsCenter(params = { phase:0}) {
+
+        let belt = [];
+
+        for(let beltNdx = 0; beltNdx < this.#params.beltVtxCount; beltNdx ++ ) {
+              
+            let beltElt = this.coords( {beltNdx : beltNdx, phase: params.phase});
+
+            belt.push([beltElt.x, beltElt.y])
+         
+
+        }
+
+        let result = Ebk.Matrix.vectorsCtr({vectors: belt});
+
+       this.beltCtr = {x: result[0], y : result[1] }  ;
+
+    }
 
     coordsRecord( params = {beltNdx : 0}) {
          
@@ -127,18 +148,22 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
 
         let record = this.colorRandRecord();
 
-        buffer[3*3*beltNdx] = record.curr.r; 
-        buffer[3*3*beltNdx +1 ] = record.curr.g; 
-        buffer[3*3*beltNdx +2 ] = record.curr.b; 
+        let triangleEltCount = 3*4;
 
-        buffer[3*3*beltNdx + 3] = record.next.r; 
-        buffer[3*3*beltNdx + 4] = record.next.g; 
-        buffer[3*3*beltNdx + 5] = record.next.b; 
+        buffer[triangleEltCount*beltNdx] = record.curr.r; 
+        buffer[triangleEltCount*beltNdx +1 ] = record.curr.g; 
+        buffer[triangleEltCount*beltNdx +2 ] = record.curr.b; 
+        buffer[triangleEltCount*beltNdx +3 ] = 1; 
 
-        buffer[3*3*beltNdx + 6] = record.ctr.r; 
-        buffer[3*3*beltNdx + 7] = record.ctr.g; 
-        buffer[3*3*beltNdx + 8] = record.ctr.b; 
+        buffer[triangleEltCount*beltNdx + 4] = record.next.r; 
+        buffer[triangleEltCount*beltNdx + 5] = record.next.g; 
+        buffer[triangleEltCount*beltNdx + 6] = record.next.b; 
+        buffer[triangleEltCount*beltNdx + 7] = 1; 
 
+        buffer[triangleEltCount*beltNdx + 8] = record.ctr.r; 
+        buffer[triangleEltCount*beltNdx + 9] = record.ctr.g; 
+        buffer[triangleEltCount*beltNdx + 10] = record.ctr.b; 
+        buffer[triangleEltCount*beltNdx + 11] = 1; 
      
 
 
@@ -154,8 +179,10 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
 
     create_buffersData( params = { phase:0}) {
 
+       // this.coordsCenter(params = { phase:params.phase});
+
         this.buffersData.coords = new Float32Array(this.vtxCount()*2);  
-        this.buffersData.colors = new Float32Array(this.vtxCount()*3); 
+        this.buffersData.colors = new Float32Array(this.vtxCount()*4); 
         this.buffersData.offsets = new Float32Array(this.#params.instanceCount*2);  
         
 

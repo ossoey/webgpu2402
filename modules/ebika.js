@@ -1021,6 +1021,18 @@ Ebk.Matrix.vectScale = (params ={v:[5,3,-8], scalar:0.5}) =>{
     }
 }
 
+Ebk.Matrix.vectorsCtr = (params ={vectors:[[3,1,4],[5,3,-8]]}) =>{
+    
+    let sum = Ebk.Matrix.vectorsAdd(params);
+
+    let result = Ebk.Matrix.vectScale({v:sum, scalar:1/params.vectors.length});
+
+    return result; 
+ 
+}
+
+
+
 Ebk.Matrix.vector = (params ={v1:[3,1,4],v2:[5,3,-8]}) =>{
     return Ebk.Matrix.vectAdd({v1:params.v2, v2: Ebk.Matrix.vectScale({v:params.v1,scalar:-1})});
 }

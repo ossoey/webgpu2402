@@ -10,7 +10,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         let ops = {};
     
         
-        ops.desc = "polygon-storage data upload to GPU";
+        ops.desc = "polygon-storage data upload to GPU, basics";
         
         // Préparation des données
         ops.ui = {};
@@ -53,9 +53,9 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 6, instanceCount: 30,colors: {start: [0.5, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 5, instanceCount: 30,colors: {start: [0.15, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
-            ops.objects.geometry.polygon.create_buffersData({phase: -0.63});
+            ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
             ops.objects.count = ops.objects.geometry.polygon.instanceCount();
             
@@ -82,7 +82,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
                @group(0) @binding(0) var <storage> coords: array<vec2f>;
-               @group(0) @binding(1) var <storage> colors: array<vec3f>;
+               @group(0) @binding(1) var <storage> colors: array<vec4f>;
                @group(0) @binding(2) var <storage> offsets: array<vec2f>;
 
                struct VertexTransfer {
@@ -97,7 +97,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                  var output : VertexTransfer;
                  
                  output.pos = vec4f(  0.1*coords[vi] + offsets[ii] ,0, 1);
-                 output.color = vec4f(colors[vi], 1);
+                 output.color = vec4f(colors[vi]);
                  
                  return output; 
 
@@ -242,7 +242,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                   } , 
                   {
                     binding: 1, // Corresponds to the binding 0 in the layout.
-                    resource: { buffer:  ops.objects.stor.colors.buffer, offset: 0, size: ops.objects.vtxCount*4*3}
+                    resource: { buffer:  ops.objects.stor.colors.buffer, offset: 0, size: ops.objects.vtxCount*4*4}
                   } , 
                   {
                     binding: 2, // Corresponds to the binding 0 in the layout.
