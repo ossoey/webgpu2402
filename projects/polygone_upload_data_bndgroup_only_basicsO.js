@@ -6,11 +6,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
 
- const polygone_upload_data_bndgroup_only_basics = (params = {context:{}}) => {
+ const polygone_upload_data_bndgroup_only_basicsO = (params = {context:{}}) => {
         let ops = {};
     
         
-        ops.desc = "polygon, upload data bindgroup only, basics";
+        ops.desc = "polygon, upload data bindgroup only, basicsO";
         
         // Préparation des données
         ops.ui = {};
@@ -53,7 +53,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 5, instanceCount: 130,colors: {start: [0.15, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 7, instanceCount: 30,colors: {start: [0.15, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
             ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
@@ -347,5 +347,5 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     }
     
     
-    export {polygone_upload_data_bndgroup_only_basics}
-    export default polygone_upload_data_bndgroup_only_basics;
+    export {polygone_upload_data_bndgroup_only_basicsO}
+    export default polygone_upload_data_bndgroup_only_basicsO;

@@ -85,7 +85,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                struct VtxBufferLoad {
 
                     @location(0) coords:  vec2f , 
-                    @location(1) colors:  vec4f ,
+                    @location(1) colors:  vec3f ,
                     @location(2) offsets:  vec2f 
 
                }
@@ -105,7 +105,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                  var output : VertexTransfer;
                  
                  output.pos = vec4f(  0.1*vtxBufferInput.coords +  vtxBufferInput.offsets   ,0, 1);
-                 output.color = vec4f( vtxBufferInput.colors  );
+                 output.color = vec4f( vtxBufferInput.colors, 1.  );
                  
                  return output; 
 
