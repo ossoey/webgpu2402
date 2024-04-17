@@ -1804,6 +1804,12 @@ Ebk.Matrix.shaderUtils =
 
     } 
 
+    fn mx_2d_distance(pt1: vec2f, pt2: vec2f )->f32 {
+
+        return  mx_2d_magnitude(mx_2d_vector(pt1 , pt2 ));
+
+    } 
+
     fn mx_2d_dotproduct(v1: vec2f, v2: vec2f )->f32 {
 
         return v1.x * v2.x + v1.y * v2.y;
@@ -1840,6 +1846,47 @@ Ebk.Matrix.shaderUtils =
                                         mx_2d_vector(ptCtr, ptRight));
 
     } 
+
+
+    fn mx_2d_angle_of_triangle1(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->f32 {
+        
+        return mx_2d_angle_of_vectors(mx_2d_vector(ptCtr, ptLeft),
+                                        mx_2d_vector(ptCtr, ptRight));
+
+    } 
+
+
+    fn mx_2d_radial_litghtfactor(light: vec2f, vertex: vec2f, lightRay: f32 )->f32 {
+
+        var factor : f32; 
+
+        var distance = mx_2d_distance(light, vertex);
+
+        if distance >= lightRay {
+            factor = 0; 
+        }
+        
+        else {
+            factor = 1 -(distance/lightRay) ;
+        };
+        
+        return factor;
+
+    } 
+
+    fn mx_2d_expo_litghtfactor(light: vec2f, vertex: vec2f  )->f32 {
+
+        var factor : f32; 
+
+        var distance = mx_2d_distance(light, vertex);
+
+        
+        factor =5 - pow(40, distance) ;
+        
+        return factor;
+
+    } 
+
 
 
 `
