@@ -6,11 +6,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
 
- const polygone_upload_data_bndgroup_only_basicsO = (params = {context:{}}) => {
+ const   polygone_upload_data_bndgroup_only_basics1 = (params = {context:{}}) => {
         let ops = {};
     
         
-        ops.desc = "polygon, upload data bindgroup only, basicsO";
+        ops.desc = "polygon, upload data bindgroup only, basics1";
         
         // Préparation des données
         ops.ui = {};
@@ -53,7 +53,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 7, instanceCount: 2000,colors: {start: [0.15, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 100, instanceCount: 2000,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
             ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
@@ -70,8 +70,8 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
-            ops.objects.stor.lightcoords.data = new Float32Array([0., 0.7]);
-            ops.objects.stor.lightcolors.data = new Float32Array([1., 0.3,  0.1]);
+            ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.0]);
+            ops.objects.stor.lightcolors.data = new Float32Array([.5, .8,  0]);
             
  
 
@@ -83,107 +83,9 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // initialiser les données 
         ops.iniData = () => {
-            ops.env.shaderCode = `
+            ops.env.shaderCode = Ebk.Matrix.shaderUtils +` ` 
+                                + Ebk.Colors.shaderUtils + ` 
 
-                fn color_blendMULT(colorA: vec3f, colorB: vec3f  )->vec3f {
-                    return  (colorA * colorB);
-                } 
-
-
-                fn color_blendAVG(colorA: vec3f, colorB: vec3f  )->vec3f {
-                    return  (colorA + colorB) / 2;
-                }
-        
-                fn color_blendADD(colorA: vec3f, colorB: vec3f  )->vec3f {
-        
-                    return  vec3f(
-                            min(colorA.r + colorA.r, 1)
-                        ,
-                            min(colorA.g + colorA.g, 1)
-                        ,
-                            min(colorA.b + colorA.b, 1)
-                        );
-                }
-        
-
-
-
-
-
-                fn mx_2d_interCoordsHori(srcCoords: vec2f, destCoord: vec2f )->vec2f {
-    
-                    return  vec2(
-                        srcCoords.x
-                    ,
-                        destCoord.y
-                    );
-                } 
-
-                fn mx_2d_interCoordsVerti(srcCoords: vec2f, destCoord: vec2f )->vec2f {
-    
-                    return  vec2(
-                        destCoord.x
-                    ,
-                        srcCoords.y
-                    );
-                } 
-
-                fn mx_2d_vector(pt1: vec2f, pt2: vec2f )->vec2f {
-    
-                    return  pt2 - pt1; 
-                } 
-
-                fn mx_2d_three_pts_matrix(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->mat2x2f {
-    
-                    return  mat2x2(
-                        mx_2d_vector(ptCtr, ptLeft)
-                    ,
-                        mx_2d_vector(ptCtr, ptRight)
-                    );
-                } 
-
-                fn mx_2d_magnitude(vector: vec2f )->f32 {
-    
-                    return sqrt(pow(vector.x,2) + pow(vector.y,2));
-
-                } 
-
-                fn mx_2d_dotproduct(v1: vec2f, v2: vec2f )->f32 {
-    
-                    return v1.x * v2.x + v1.y * v2.y;
-
-                } 
-
-                fn mx_2d_cosangle_of_vectors(v1: vec2f, v2: vec2f )->f32 {
-                    
-                    var dot = mx_2d_dotproduct(v1, v2);
-
-                    var v1mag = mx_2d_magnitude(v1);
-                    var v2mag = mx_2d_magnitude(v2);
-
-                    return   dot/(v1mag*v2mag)  ;
-
-                } 
-
-
-                fn mx_2d_angle_of_vectors(v1: vec2f, v2: vec2f )->f32 {
-                    return  acos(mx_2d_cosangle_of_vectors(v1, v2))  ;
-                } 
-
-
-                fn mx_2d_cosangle_of_triangle(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->f32 {
-                    
-                   return mx_2d_cosangle_of_vectors(mx_2d_vector(ptCtr, ptLeft),
-                                                    mx_2d_vector(ptCtr, ptRight));
-
-                } 
-
-                fn mx_2d_angle_of_triangle(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->f32 {
-                    
-                    return mx_2d_angle_of_vectors(mx_2d_vector(ptCtr, ptLeft),
-                                                     mx_2d_vector(ptCtr, ptRight));
- 
-                 } 
 
 
                @group(0) @binding(0) var <storage> coords: array<vec2f>;
@@ -211,19 +113,20 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                  output.color = colors[vi];
 
 
-                 output.light_incidence = mx_2d_cosangle_of_triangle(vxcoord, 
-                                           lightcoords,
-                                           mx_2d_interCoordsHori(lightcoords, vxcoord ));
+                 //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                 //output.light_incidence =  lightcolors;
+                  output.light_incidence =   mx_2d_expo_litghtfactor(lightcoords, vxcoord );
 
 
                  return output; 
 
               }
     
+
+            //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN
+
               @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
-                  return vec4f(color_blendMULT( vec3f(light_incidence*1., light_incidence*1,  light_incidence*1), color ), 1);
+                  return vec4f( color_blendSCREEN( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
               }
             
             ` ;
@@ -396,7 +299,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 }
             );
 
-            ops.env.device.queue.writeBuffer(ops.objects.stor.lightcolors.buffer , 0 , ops.objects.stor.lightcoords.data);
+            ops.env.device.queue.writeBuffer(ops.objects.stor.lightcolors.buffer , 0 , ops.objects.stor.lightcolors.data);
 
 
 
@@ -525,5 +428,5 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     }
     
     
-    export {polygone_upload_data_bndgroup_only_basicsO}
-    export default polygone_upload_data_bndgroup_only_basicsO;
+    export { polygone_upload_data_bndgroup_only_basics1}
+    export default   polygone_upload_data_bndgroup_only_basics1;

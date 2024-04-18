@@ -1739,6 +1739,10 @@ Ebk.Matrix.testInverse = (params ={ matrix:[[1,2,3,4,5],[6,7,8,9,10],[11,12,13,1
 
 
 
+
+
+
+
  Ebk.Matrix.tests = (paramsTestOptions =[
                   
     {position: [3,1,9], arr : [1,2,3,4,5,6,7,8,9], fromIndex : 2, toIndex : 5, withoutIndex : 2,elt:0,times:10, vectors:[[3,1,4],[5,3,-8]],dim: 3},
@@ -1759,6 +1763,134 @@ Ebk.Matrix.testInverse = (params ={ matrix:[[1,2,3,4,5],[6,7,8,9,10],[11,12,13,1
   ])=>{
 Ebk.ObjectName.tests( Ebk.Matrix,paramsTestOptions ); 
 }
+
+Ebk.Matrix.shaderUtils =
+  `
+    fn mx_2d_interCoordsHori(srcCoords: vec2f, destCoord: vec2f )->vec2f {
+        
+        return  vec2(
+            srcCoords.x
+        ,
+            destCoord.y
+        );
+    } 
+
+    fn mx_2d_interCoordsVerti(srcCoords: vec2f, destCoord: vec2f )->vec2f {
+
+        return  vec2(
+            destCoord.x
+        ,
+            srcCoords.y
+        );
+    } 
+
+    fn mx_2d_vector(pt1: vec2f, pt2: vec2f )->vec2f {
+
+        return  pt2 - pt1; 
+    } 
+
+    fn mx_2d_three_pts_matrix(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->mat2x2f {
+
+        return  mat2x2(
+            mx_2d_vector(ptCtr, ptLeft)
+        ,
+            mx_2d_vector(ptCtr, ptRight)
+        );
+    } 
+
+    fn mx_2d_magnitude(vector: vec2f )->f32 {
+
+        return sqrt(pow(vector.x,2) + pow(vector.y,2));
+
+    } 
+
+    fn mx_2d_distance(pt1: vec2f, pt2: vec2f )->f32 {
+
+        return  mx_2d_magnitude(mx_2d_vector(pt1 , pt2 ));
+
+    } 
+
+    fn mx_2d_dotproduct(v1: vec2f, v2: vec2f )->f32 {
+
+        return v1.x * v2.x + v1.y * v2.y;
+
+    } 
+
+    fn mx_2d_cosangle_of_vectors(v1: vec2f, v2: vec2f )->f32 {
+        
+        var dot = mx_2d_dotproduct(v1, v2);
+
+        var v1mag = mx_2d_magnitude(v1);
+        var v2mag = mx_2d_magnitude(v2);
+
+        return   dot/(v1mag*v2mag)  ;
+
+    } 
+
+
+    fn mx_2d_angle_of_vectors(v1: vec2f, v2: vec2f )->f32 {
+        return  acos(mx_2d_cosangle_of_vectors(v1, v2))  ;
+    } 
+
+
+    fn mx_2d_cosangle_of_triangle(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->f32 {
+        
+    return mx_2d_cosangle_of_vectors(mx_2d_vector(ptCtr, ptLeft),
+                                        mx_2d_vector(ptCtr, ptRight));
+
+    } 
+
+    fn mx_2d_angle_of_triangle(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->f32 {
+        
+        return mx_2d_angle_of_vectors(mx_2d_vector(ptCtr, ptLeft),
+                                        mx_2d_vector(ptCtr, ptRight));
+
+    } 
+
+
+    fn mx_2d_angle_of_triangle1(ptLeft: vec2f, ptCtr: vec2f, ptRight: vec2f )->f32 {
+        
+        return mx_2d_angle_of_vectors(mx_2d_vector(ptCtr, ptLeft),
+                                        mx_2d_vector(ptCtr, ptRight));
+
+    } 
+
+
+    fn mx_2d_radial_litghtfactor(light: vec2f, vertex: vec2f, lightRay: f32 )->f32 {
+
+        var factor : f32; 
+
+        var distance = mx_2d_distance(light, vertex);
+
+        if distance >= lightRay {
+            factor = 0; 
+        }
+        
+        else {
+            factor = 1 -(distance/lightRay) ;
+        };
+        
+        return factor;
+
+    } 
+
+    fn mx_2d_expo_litghtfactor(light: vec2f, vertex: vec2f  )->f32 {
+
+        var factor : f32; 
+
+        var distance = mx_2d_distance(light, vertex);
+
+        
+        factor =5 - pow(40, distance) ;
+        
+        return factor;
+
+    } 
+
+
+
+`
+
 
 
 /////// Ebk.Trajectory

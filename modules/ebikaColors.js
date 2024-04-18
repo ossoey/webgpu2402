@@ -74,6 +74,7 @@ Ebk.Colors =  {
       
         return hexColor.toUpperCase(); // Convert to uppercase for consistency
     }, 
+    
 
     shaderUtils: `
         
@@ -96,7 +97,7 @@ Ebk.Colors =  {
             return  (colorA * colorB);
         } 
 
-        fn color_blendSCREEN(colorA: vec3f, colorB: vec3f, customvect: vec3f  )->vec3f {
+        fn color_blendSCREEN(colorA: vec3f, colorB: vec3f)->vec3f {
  
             return  vec3f(
                 1.0 - (1.0 - colorA.r) * (1.0 - colorB.r)
