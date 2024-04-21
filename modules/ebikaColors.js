@@ -108,22 +108,6 @@ Ebk.Colors =  {
             );
         } 
 
-        fn color_blendOVERLAY(colorA: vec3f, colorB: vec3f )->vec3f {
-            //colorA Base color (background) 
-            //colorB Blend color (foreground)  
-
-            var colorOutPut: vec3f; 
-
-            var luminance = 0.2126 * colorA.r +  0.7152 * colorA.g + 0.0722 * colorA.b;
-
-            if (luminance < 0.5) {  // "Multiply"
-                colorOutPut = color_blendMULT(colorA, colorB);
-            } else {  // "screen"
-                color_blendSCREEN(colorA, colorB);
-            }
-
-            return  colorOutPut;
-        } 
             
     `
 

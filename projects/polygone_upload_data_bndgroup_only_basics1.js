@@ -70,7 +70,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
-            ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.0]);
+            ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.7]);
             ops.objects.stor.lightcolors.data = new Float32Array([.5, .8,  0]);
             
  
@@ -107,7 +107,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
                  var output : VertexTransfer;
                  
-                 var vxcoord = 0.03*coords[vi] + offsets[ii];
+                 var vxcoord = 0.01*coords[vi] + offsets[ii];
 
                  output.pos = vec4f( vxcoord  ,0, 1);
                  output.color = colors[vi];

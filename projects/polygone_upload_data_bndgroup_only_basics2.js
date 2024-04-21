@@ -6,11 +6,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
 
- const polygone_storageUploadToGPU = (params = {context:{}}) => {
+ const   polygone_upload_data_bndgroup_only_basics2 = (params = {context:{}}) => {
         let ops = {};
     
         
-        ops.desc = "polygon-storage data upload to GPU, basics";
+        ops.desc = "polygon, upload data bindgroup only, basics2";
         
         // Préparation des données
         ops.ui = {};
@@ -53,10 +53,9 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 5, instanceCount: 30,colors: {start: [0.15, 0.51, 0.53] , end: [1, 1, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:16, instanceCount: 5,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
             ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
-            
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
             ops.objects.count = ops.objects.geometry.polygon.instanceCount();
             
@@ -64,14 +63,22 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.coords = {};
             ops.objects.stor.colors = {};
             ops.objects.stor.offsets = {};
+            ops.objects.stor.lightcoords = {};
+            ops.objects.stor.lightcolors = {};
+
 
             ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
+            ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.7]);
+            ops.objects.stor.lightcolors.data = new Float32Array([.5, .8,  0]);
+            
+              
+            // Data to deal with. 
+            // edgeRoughness : 3, 
 
- 
 
-            console.log(ops.objects.geometry.polygon.buffersData, ops.objects.stor)
+       
 
 
         }
@@ -79,17 +86,23 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // initialiser les données 
         ops.iniData = () => {
-            ops.env.shaderCode = `
+            ops.env.shaderCode = Ebk.Matrix.shaderUtils +` ` 
+                                + Ebk.Colors.shaderUtils + ` 
+
 
 
                @group(0) @binding(0) var <storage> coords: array<vec2f>;
-               @group(0) @binding(1) var <storage> colors: array<vec4f>;
+               @group(0) @binding(1) var <storage> colors: array<vec3f>;
                @group(0) @binding(2) var <storage> offsets: array<vec2f>;
+               @group(0) @binding(3) var <storage> lightcoords: vec2f;
+               @group(0) @binding(4) var <storage> lightcolors: vec3f;
+
 
                struct VertexTransfer {
 
                  @builtin(position) pos : vec4f, 
-                 @location(0) color: vec4f
+                 @location(0) color: vec3f, 
+                 @location(1) light_incidence: f32
 
                }
                
@@ -97,15 +110,26 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
                  var output : VertexTransfer;
                  
-                 output.pos = vec4f(  0.1*coords[vi] + offsets[ii] ,0, 1);
-                 output.color = vec4f(colors[vi]);
-                 
+                 var vxcoord = 0.6*coords[vi] + offsets[ii];
+
+                 output.pos = vec4f( vxcoord  ,0, 1);
+                 output.color = colors[vi];
+
+
+                 //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
+
+                  output.light_incidence =   mx_2d_expo_litghtfactor(lightcoords, vxcoord );
+
+
                  return output; 
 
               }
     
-              @fragment fn fs(@location(0) color : vec4f) -> @location(0) vec4f {
-                  return color;
+
+            //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN 
+
+              @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
+                  return vec4f( color_blendSCREEN( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
               }
             
             ` ;
@@ -173,6 +197,26 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                         
                     }  , 
 
+                    {    // lightcoords
+                        binding: 3 , 
+                        visibility: GPUShaderStage.VERTEX, 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
+
+                    {    // light color
+                        binding: 4 , 
+                        visibility: GPUShaderStage.FRAGMENT , 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
+
+
+
 
                 
                 ]
@@ -234,6 +278,34 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
             ops.env.device.queue.writeBuffer(ops.objects.stor.offsets.buffer , 0 , ops.objects.stor.offsets.data);
 
+
+
+
+
+
+           ops.objects.stor.lightcoords.buffer =  ops.env.device.createBuffer(
+                {
+                    label: `Buffer offsets${ops.desc}`, 
+                    size: ops.objects.stor.lightcoords.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.lightcoords.buffer , 0 , ops.objects.stor.lightcoords.data);
+
+
+            ops.objects.stor.lightcolors.buffer =  ops.env.device.createBuffer(
+                {
+                    label: `Buffer offsets${ops.desc}`, 
+                    size: ops.objects.stor.lightcolors.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.lightcolors.buffer , 0 , ops.objects.stor.lightcolors.data);
+
+
+
             ops.env.bindGroup = ops.env.device.createBindGroup({
                 layout: ops.env.bindGroupLayout,
                 entries: [ 
@@ -249,6 +321,17 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                     binding: 2, // Corresponds to the binding 0 in the layout.
                     resource: { buffer:  ops.objects.stor.offsets.buffer, offset: 0, size: ops.objects.count*4*2}
                   } , 
+
+                  {
+                    binding: 3, // Corresponds to the binding 0 in the layout.
+                    resource: { buffer:  ops.objects.stor.lightcoords.buffer, offset: 0, size: 4*2}
+                  } , 
+
+                  {
+                    binding: 4, // Corresponds to the binding 0 in the layout.
+                    resource: { buffer:  ops.objects.stor.lightcolors.buffer, offset: 0, size: 4*3}
+                  } , 
+
 
                 ]
              });
@@ -348,5 +431,5 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     }
     
     
-    export {polygone_storageUploadToGPU}
-    export default polygone_storageUploadToGPU;
+    export { polygone_upload_data_bndgroup_only_basics2}
+    export default   polygone_upload_data_bndgroup_only_basics2;
