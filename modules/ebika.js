@@ -1874,6 +1874,19 @@ Ebk.Matrix.shaderUtils =
 
     } 
 
+    // fn mx_2d_expo_litghtfactor(light: vec2f, vertex: vec2f  )->f32 {
+
+    //     var factor : f32; 
+
+    //     var distance = mx_2d_distance(light, vertex);
+
+        
+    //     factor =5 - pow(40, distance) ;
+        
+    //     return factor;
+
+    // } 
+
     fn mx_2d_expo_litghtfactor(light: vec2f, vertex: vec2f  )->f32 {
 
         var factor : f32; 
@@ -1881,7 +1894,7 @@ Ebk.Matrix.shaderUtils =
         var distance = mx_2d_distance(light, vertex);
 
         
-        factor =5 - pow(40, distance) ;
+        factor =5/(1 + pow(15, distance)) ;
         
         return factor;
 

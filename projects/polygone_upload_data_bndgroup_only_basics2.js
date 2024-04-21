@@ -6,11 +6,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
 
- const   polygone_upload_data_bndgroup_only_basics1 = (params = {context:{}}) => {
+ const   polygone_upload_data_bndgroup_only_basics2 = (params = {context:{}}) => {
         let ops = {};
     
         
-        ops.desc = "polygon, upload data bindgroup only, basics1";
+        ops.desc = "polygon, upload data bindgroup only, basics2";
         
         // Préparation des données
         ops.ui = {};
@@ -53,7 +53,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount: 100, instanceCount: 2000,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:16, instanceCount: 5,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
             ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
@@ -73,9 +73,12 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.7]);
             ops.objects.stor.lightcolors.data = new Float32Array([.5, .8,  0]);
             
- 
+              
+            // Data to deal with. 
+            // edgeRoughness : 3, 
 
-            console.log(ops.objects.geometry.polygon.buffersData, ops.objects.stor)
+
+       
 
 
         }
@@ -107,7 +110,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
                  var output : VertexTransfer;
                  
-                 var vxcoord = 0.01*coords[vi] + offsets[ii];
+                 var vxcoord = 0.6*coords[vi] + offsets[ii];
 
                  output.pos = vec4f( vxcoord  ,0, 1);
                  output.color = colors[vi];
@@ -123,7 +126,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
               }
     
 
-            //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN
+            //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN 
 
               @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
                   return vec4f( color_blendSCREEN( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
@@ -428,5 +431,5 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     }
     
     
-    export { polygone_upload_data_bndgroup_only_basics1}
-    export default   polygone_upload_data_bndgroup_only_basics1;
+    export { polygone_upload_data_bndgroup_only_basics2}
+    export default   polygone_upload_data_bndgroup_only_basics2;
