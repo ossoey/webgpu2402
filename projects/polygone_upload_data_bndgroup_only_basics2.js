@@ -41,6 +41,16 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 alignItems : "center"
               
               }}});
+              ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
+ 
+                container: params.inputContainer,
+                // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+                labelProperties:  { style: { color: 'blue', display: "grid",  "font-size":'11px'  }, text: 'Attributs' },
+                colorProperties:  { type:"color", style: { width: '40px', height : '18px'    } },
+                inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '40px',  height : '2px'  } },
+                                   { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '40px' ,  height : '2px'  } }
+                                 ] 
+              });
     
               
     
@@ -126,7 +136,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 4., 20 );
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 6., 3 );
 
 
                  return output; 
