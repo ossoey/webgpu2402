@@ -53,7 +53,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:16, instanceCount: 5,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:16, instanceCount: 2000,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
 
             ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
@@ -74,8 +74,16 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.lightcolors.data = new Float32Array([.5, .8,  0]);
             
               
-            // Data to deal with. 
-            // edgeRoughness : 3, 
+            // Make ui fot data below. 
+            // edgeRoughness : [3, 12], -> slider
+            // instanceCount : [3, 12], -> slider
+            // vertex info(coords, colors), start to end, 
+            // instance info(offset, colors, size, phase), start to end,
+            // light(positon, color, type[1, n], composition(1..4)), 
+            
+
+
+
 
 
        
@@ -110,7 +118,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
                  var output : VertexTransfer;
                  
-                 var vxcoord = 0.6*coords[vi] + offsets[ii];
+                 var vxcoord = 0.06*coords[vi] + offsets[ii];
 
                  output.pos = vec4f( vxcoord  ,0, 1);
                  output.color = colors[vi];
@@ -118,7 +126,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                  output.light_incidence =   mx_2d_expo_litghtfactor(lightcoords, vxcoord );
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 4., 20 );
 
 
                  return output; 
@@ -129,7 +137,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN 
 
               @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
-                  return vec4f( color_blendSCREEN( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
+                  return vec4f(  color_blendMULT( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
               }
             
             ` ;
