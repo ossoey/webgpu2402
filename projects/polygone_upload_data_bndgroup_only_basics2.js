@@ -79,7 +79,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             // instanceCount : [3, 12], -> slider
             // vertex info(coords, colors), start to end, 
             // instance info(offset, colors, size, phase), start to end,
-            // light(positon, color, type[1, n], composition(1..4)), 
+            // light(positon, color, type[1, n], composition(1..4), intensity, spectre), 
             
 
 
