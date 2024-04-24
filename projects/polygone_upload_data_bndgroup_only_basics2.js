@@ -54,12 +54,28 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             //   });
 
 
-              EbkUI.createAndAddElementFirstPosition({container: params.inputContainer,
-                           properties: { style: { color: 'blue', display: "grid",  "font-size":'11px'  }, textContent : 'Attributs' }, elementType: "div"  }    )
+            let grid1 =  EbkUI.createAndAddElementFirstPosition({container: params.inputContainer,
+                           properties: { 
+                            style: { color: 'blue', display: "grid",  "font-size":'11px',
+                            'grid-template-columns': 'repeat(4, 1fr)' , gap: '10px'        
+                        
+                        }, 
+                        
+                        textContent : ' ' }, elementType: "div"  }    );
+
+            
+           let subElement1  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
+           let subElement2  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement2'}, elementType: "div"  }    )
+           let subElement3  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
+    
+           let subElement4  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement1'}, elementType: "div"  }    )
+           let subElement5  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement2'}, elementType: "div"  }    )
+           let subElement6  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
+ 
     
               
     
-        }
+       }
         
     
         // Initialiser les structures de données. 
@@ -141,7 +157,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 2., 6 );
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 9., 100000000 );
 
 
                  return output; 
