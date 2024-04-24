@@ -41,16 +41,21 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 alignItems : "center"
               
               }}});
-              ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
+
+            //   ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
  
-                container: params.inputContainer,
-                // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-                labelProperties:  { style: { color: 'blue', display: "grid",  "font-size":'11px'  }, text: 'Attributs' },
-                colorProperties:  { type:"color", style: { width: '40px', height : '18px'    } },
-                inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '40px',  height : '2px'  } },
-                                   { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '40px' ,  height : '2px'  } }
-                                 ] 
-              });
+            //     container: params.inputContainer,
+            //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+            //     labelProperties:  { style: { color: 'blue', display: "grid",  "font-size":'11px'  }, text: 'Attributs' },
+            //     colorProperties:  { type:"color", style: { width: '40px', height : '18px' , padding: '0px', margin: '0px'   } },
+            //     inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '7%',  height : '7%', 'border-radius': '7.5px'  } },
+            //                        { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '40px' ,  height : '2px'  } }
+            //                      ] 
+            //   });
+
+
+              EbkUI.createAndAddElementFirstPosition({container: params.inputContainer,
+                           properties: { style: { color: 'blue', display: "grid",  "font-size":'11px'  }, textContent : 'Attributs' }, elementType: "div"  }    )
     
               
     
@@ -136,7 +141,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 6., 3 );
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 2., 6 );
 
 
                  return output; 
@@ -147,7 +152,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN 
 
               @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
-                  return vec4f(  color_blendMULT( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
+                  return vec4f(  color_blendSCREEN  ( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
               }
             
             ` ;
