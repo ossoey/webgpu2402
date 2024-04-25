@@ -29,6 +29,25 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // Création des ui 
         ops.createUI = () =>{
+
+            let prevWidth = window.innerWidth;
+
+            function adjustGridLayout(gridContainer ) {
+               
+                
+                // Check if screen width is less than or equal to 768px
+                if (window.innerWidth < 600) {
+                  // Set grid template columns to two columns
+                  gridContainer.style['grid-template-columns'] =  'repeat(1, 1fr)' ;
+                } else if (window.innerWidth > 600) {
+                  // Set grid template columns to four columns
+                
+                  gridContainer.style['grid-template-columns'] =  'repeat(4, 1fr)' ;
+                }
+
+
+                 
+              }
     
             params.inputContainer.innerHTML = "" 
     
@@ -63,7 +82,10 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                         
                         textContent : ' ' }, elementType: "div"  }    );
 
-            
+                  
+               
+           window.addEventListener('resize', adjustGridLayout.bind(null,grid1));
+
            let subElement1  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
            let subElement2  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement2'}, elementType: "div"  }    )
            let subElement3  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
@@ -72,7 +94,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
            let subElement5  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement2'}, elementType: "div"  }    )
            let subElement6  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
  
-    
+
               
     
        }
@@ -157,7 +179,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 9., 100000000 );
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 2.6, 3);
 
 
                  return output; 
