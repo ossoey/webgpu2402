@@ -42,7 +42,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 } else if (window.innerWidth > 600) {
                   // Set grid template columns to four columns
                 
-                  gridContainer.style['grid-template-columns'] =  'repeat(5, 1fr)' ;
+                  gridContainer.style['grid-template-columns'] =  'minmax(20px, auto) repeat(2, 1fr)' ;
                 }
 
 
@@ -76,33 +76,32 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             let grid1 =  EbkUI.createAndAddElementFirstPosition({container: params.inputContainer,
                            properties: { 
                             style: { color: 'blue', display: "grid",  "font-size":'11px',
-                            'grid-template-columns': 'repeat(5, 1fr)' , gap: '10px'        
+                            'grid-template-columns': 'minmax(20px, auto) repeat(2, 1fr)' , gap: '10px',     
                         
                         }, 
                         
                         textContent : ' ' }, elementType: "div"  }    );
-
-                  
+                 
                
            window.addEventListener('resize', adjustGridLayout.bind(null,grid1));
 
            let subElement1  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
            let subElement2  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'Object'}, elementType: "div"  }    )
-           let subElement3  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
            let subElement4  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
-           let subElement111  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
-
+  
            let subElement5  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
            let subElement6  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'Start'}, elementType: "div"  }    )
-           let subElement7  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ''}, elementType: "div"  }    )
            let subElement8  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'End'}, elementType: "div"  }    )
-           let subElement88  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
-
-           let subElement9  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'colorA'}, elementType: "div"  }    )
-           let subElement10  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "input", style:{type:"range"}  }    )
-           let subElement11  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
+  
+           let subElement9  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'color',  style: {width:"10px"} }, elementType: "div"  }    )
+           let subElement10  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3' ,   type:"color", style: {width:"50px"}   }, elementType: "input"}    )
            let subElement12  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
-           let subElement121  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
+  
+           let subElement99  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'x'}, elementType: "div"  }    )
+           let subElement109  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3' ,   type:"range", style: {width:"50px"}   }, elementType: "input"}    )
+           let subElement129  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
+  
+
     
        }
         
