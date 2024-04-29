@@ -42,7 +42,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 } else if (window.innerWidth > 600) {
                   // Set grid template columns to four columns
                 
-                  gridContainer.style['grid-template-columns'] =  'minmax(20px, auto) repeat(2, 1fr)' ;
+                  gridContainer.style['grid-template-columns'] =  'minmax(23px, auto) repeat(2, 1fr)' ;
                 }
 
 
@@ -61,46 +61,215 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
               
               }}});
 
-            //   ops.ui.circleTriangleStrip = EbkUI.createElement_LabeledVertexInputs({
- 
-            //     container: params.inputContainer,
-            //     // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
-            //     labelProperties:  { style: { color: 'blue', display: "grid",  "font-size":'11px'  }, text: 'Attributs' },
-            //     colorProperties:  { type:"color", style: { width: '40px', height : '18px' , padding: '0px', margin: '0px'   } },
-            //     inputsProperties: [{ type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '7%',  height : '7%', 'border-radius': '7.5px'  } },
-            //                        { type:"range", min:"-1", max:"1", value:"0", step:"0.01" , style: { width: '40px' ,  height : '2px'  } }
-            //                      ] 
-            //   });
 
+          let objectElements = EbkUI.createElementsInContainer({ 
+                container:{container: params.inputContainer,
+                    properties: { 
+                    style: { color: 'blue', display: "grid",  "font-size":'11px',
+                    'grid-template-columns': 'minmax(23px, auto) repeat(2, 1fr)' , gap: '3px',     
+                
+                },     textContent : ' ' }, elementType: "div"  } ,
+                
+           
+            elements: [
+               {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+               {eltName: '01', params: {properties: {textContent : 'Object'}, elementType: "div"  } } , 
+               {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
 
-            let grid1 =  EbkUI.createAndAddElementFirstPosition({container: params.inputContainer,
-                           properties: { 
-                            style: { color: 'blue', display: "grid",  "font-size":'11px',
-                            'grid-template-columns': 'minmax(20px, auto) repeat(2, 1fr)' , gap: '10px',     
-                        
-                        }, 
-                        
-                        textContent : ' ' }, elementType: "div"  }    );
-                 
+               {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+               {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
+               {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+
+               {eltName: '10', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+               {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+               {eltName: '20', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: 'positionXStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+               {eltName: 'positionXEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+               {eltName: '30', params: {properties: {textContent : 'y',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: '31', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+               {eltName: '32', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+               {eltName: '40', params: {properties: {textContent : 'size',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: 'sizeStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+               {eltName: 'sizeEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+               {eltName: '50', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: 'count', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+               {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+               {eltName: '60', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: '61', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+               {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+        
                
-           window.addEventListener('resize', adjustGridLayout.bind(null,grid1));
+               {eltName: '70', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: '71', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+               {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
 
-           let subElement1  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
-           let subElement2  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'Object'}, elementType: "div"  }    )
-           let subElement4  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
-  
-           let subElement5  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : ' '}, elementType: "div"  }    )
-           let subElement6  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'Start'}, elementType: "div"  }    )
-           let subElement8  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'End'}, elementType: "div"  }    )
-  
-           let subElement9  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'color',  style: {width:"10px"} }, elementType: "div"  }    )
-           let subElement10  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3' ,   type:"color", style: {width:"50px"}   }, elementType: "input"}    )
-           let subElement12  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
-  
-           let subElement99  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'x'}, elementType: "div"  }    )
-           let subElement109  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3' ,   type:"range", style: {width:"50px"}   }, elementType: "input"}    )
-           let subElement129  = EbkUI.createAndAppendElement({container: grid1, properties: {textContent : 'subElement3'}, elementType: "div"  }    )
-  
+               {eltName: '80', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+               {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+        
+           
+           ]   }    ) ;
+
+
+
+           let vertexElementsSpace = EbkUI.createElementsInContainer({ 
+            container:{container: params.inputContainer,
+                properties: { 
+                style: { color: 'blue', display: "grid",  "font-size":'11px',
+                'grid-template-columns': 'minmax(23px, auto) repeat(2, 1fr)' , gap: '3px',     
+            
+            },     textContent : ' ' }, elementType: "div"  } ,
+            
+       
+        elements: [
+           {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+           {eltName: '01', params: {properties: {textContent : ' '}, elementType: "div"  } } , 
+           {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+       
+       ]   }    ) ;
+
+
+       let vertexElements = EbkUI.createElementsInContainer({ 
+        container:{container: params.inputContainer,
+            properties: { 
+            style: { color: 'blue', display: "grid",  "font-size":'11px',
+            'grid-template-columns': 'minmax(45px, auto) repeat(2, 1fr)' , gap: '3px',     
+        
+        },     textContent : ' ' }, elementType: "div"  } ,
+        
+   
+    elements: [
+       {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+       {eltName: '01', params: {properties: {textContent : 'Vertex'}, elementType: "div"  } } , 
+       {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+       {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+       {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
+       {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+
+       {eltName: '20', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '21', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: '22', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '30', params: {properties: {textContent : 'roughness',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'roughnessStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: 'roughnessStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '40', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '41', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '42', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+       {eltName: '50', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '51', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+
+       {eltName: '60', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '61', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+       
+       {eltName: '70', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '71', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+
+       {eltName: '80', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+   
+       {eltName: '90', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+       {eltName: '100', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '101', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '102', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+      ]   }    ) ;
+     
+
+      let vertexElementsSpace1 = EbkUI.createElementsInContainer({ 
+        container:{container: params.inputContainer,
+            properties: { 
+            style: { color: 'blue', display: "grid",  "font-size":'11px',
+            'grid-template-columns': 'minmax(23px, auto) repeat(2, 1fr)' , gap: '3px',     
+        
+        },     textContent : ' ' }, elementType: "div"  } ,
+        
+   
+    elements: [
+       {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+       {eltName: '01', params: {properties: {textContent : ' '}, elementType: "div"  } } , 
+       {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+   
+   ]   }    ) ;
+
+
+      let lightElements = EbkUI.createElementsInContainer({ 
+        container:{container: params.inputContainer,
+            properties: { 
+            style: { color: 'blue', display: "grid",  "font-size":'11px',
+            'grid-template-columns': 'minmax(50px, auto) repeat(2, 1fr)' , gap: '3px',     
+        
+        },     textContent : ' ' }, elementType: "div"  } ,
+        
+   
+    elements: [
+       {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+       {eltName: '01', params: {properties: {textContent : 'Light'}, elementType: "div"  } } , 
+       {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+       {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+       {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
+       {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+
+       {eltName: '20', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '30', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'positionXStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: 'positionXEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '40', params: {properties: {textContent : 'y',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'positionYStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: 'positionYEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '50', params: {properties: {textContent : 'type',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'type', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '60', params: {properties: {textContent : 'composition',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'composition', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+
+       {eltName: '70', params: {properties: {textContent : 'intensity',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'intensity', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+
+       {eltName: '80', params: {properties: {textContent : 'spectre',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'spectre', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+   
+   ]   }    ) ;
+
+         
+
+
+
+        //   window.addEventListener('resize', adjustGridLayout.bind(null,objectElements.container));
+
 
     
        }
@@ -130,7 +299,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
             ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.7]);
-            ops.objects.stor.lightcolors.data = new Float32Array([.5, .8,  0]);
+            ops.objects.stor.lightcolors.data = new Float32Array([.9, .0,  0.]);
             
               
             // Make ui fot data below. 
@@ -185,7 +354,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord, 2.6, 3);
+                  output.light_incidence =   mx_2d_litght2(lightcoords, vxcoord, 1.9, 4);
 
 
                  return output; 
