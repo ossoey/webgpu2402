@@ -112,8 +112,37 @@ Ebk.UI =  {
       return newElement;
   } , 
 
+  createElementsInContainer : (params={ 
+               container:{container: {},
+                properties: { 
+                  style: { color: 'blue', display: "grid",  "font-size":'11px',
+                  'grid-template-columns': 'minmax(23px, auto) repeat(2, 1fr)' , gap: '3px',     
+              
+              },  textContent : ' ' }, elementType: "div"  },
+              
+              
+               elements: [
+                  {eltName: 'label1', params: {properties: {textContent : ' '}, elementType: "div"  } }  
+                   
+              
+              ]   }    ) => { 
+
+      let result = {};
+
+      result.container =    Ebk.UI.createAndAppendElement ( params.container )   
+      
+      params.elements.forEach(elt=>{
+        elt.params.container = result.container; 
+        result[elt.eltName] =  Ebk.UI.createAndAppendElement(elt.params);
+
+      })
+
+      return result; 
+
+  } , 
+
     // Function to create a labeled <input> element with a container and properties
-    createElement_LabeledInput : (params= {
+  createElement_LabeledInput : (params= {
  
         container: {},
         // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
