@@ -1856,6 +1856,7 @@ Ebk.Matrix.shaderUtils =
     } 
 
 
+    // LIGHT DESIGN PROGRESSION----------------------------
     fn mx_2d_radial_litghtfactor(light: vec2f, vertex: vec2f, lightRay: f32 )->f32 {
 
         var factor : f32; 
@@ -1899,7 +1900,7 @@ Ebk.Matrix.shaderUtils =
 
     } 
 
-   fn mx_2d_litght(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
+   fn mx_2d_litght00(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
 
         var factor : f32; 
 
@@ -1911,7 +1912,7 @@ Ebk.Matrix.shaderUtils =
 
     }
 
-    fn mx_2d_litght1(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
+    fn mx_2d_litght01(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
 
         var factor : f32; 
 
@@ -1922,7 +1923,8 @@ Ebk.Matrix.shaderUtils =
         return factor; 
     }
 
-    fn mx_2d_litght2(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
+
+    fn mx_2d_litght02(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
 
         var factor : f32; 
 
@@ -1934,7 +1936,17 @@ Ebk.Matrix.shaderUtils =
 
     }
 
+    fn mx_2d_litght(light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
 
+        var factor : f32; 
+
+        var distance = mx_2d_distance(light, vertex);
+
+        factor =intensity/(1 + distance*pow(spectre, distance)) ;
+        
+        return factor; 
+
+    }
 
 `
 

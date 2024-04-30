@@ -32,8 +32,8 @@ const triangle = (params = {context:{}}) => {
             flexDirection :"row", 
             flexWrap : "nowrap" , 
             justifyContent : "flex-start", 
-            alignItems : "center"
-          
+            alignItems : "center",
+            padding: '0px 0px 0px 50px'
           }}});
 
           

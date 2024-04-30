@@ -194,6 +194,9 @@ Ebk.UI =  {
  } , 
 
 
+ 
+
+
   createElement_LabeledVertexInputs : (params= {
  
     container: {},
@@ -333,7 +336,47 @@ Ebk.UI =  {
   
     // Return the created container div
     return {selectElement, labelElement};
+  } ,
+
+
+  createElementAppend_LabeledSelect : (params= {
+ 
+    options: [
+      { value: 'option1', textContent: 'Option 1' },
+      { value: 'option2', textContent: 'Option 2' },
+      { value: 'option3', textContent: 'Option 3' },
+      { value: 'option4', textContent: 'Option 4' }
+    ],
+    container: {},
+    // divProperties: { id: 'myContainer', style: { border: '1px solid #ccc', padding: '10px' } },
+    labelProperties: { style: { color: 'blue' }, text: 'Select Label' },
+    selectProperties: { id: 'mySelect', style: { width: '150px' } }
+  }) =>{
+  
+  
+    // Create a container div with specified properties
+    // let containerDiv = createAndAppendElement({container: params.container, properties : params.divProperties, elementType: "div" });
+  
+    // Create a <label> element with specified properties
+    let labelElement= Ebk.UI.createAndAppendElement({container:  params.container, properties : params.labelProperties, elementType: 'label'});
+    labelElement.textContent = params.labelProperties.text || '';
+  
+    // Create a <select> element with specified properties
+  
+    let selectElement= Ebk.UI.createAndAppendElement({container: labelElement, properties : params.selectProperties, elementType: 'select'});
+  
+    // Append the <select> element to the <label>
+    // labelElement.appendChild(selectElement);
+  
+    // Iterate over the options and create <option> elements
+    params.options.forEach(function (option) {
+        Ebk.UI.createAndAppendElement({container: selectElement, properties : option, elementType: 'option'});
+    });
+  
+    // Return the created container div
+    return {selectElement, labelElement};
   }
+
 
 }
 
