@@ -57,8 +57,8 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 flexDirection :"row", 
                 flexWrap : "nowrap" , 
                 justifyContent : "flex-start", 
-                alignItems : "center"
-              
+                alignItems : "center",
+                padding: '10px 0px 0px 30px'
               }}});
 
 
@@ -113,6 +113,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
                {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
         
+               {eltName: '90', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+               {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+               {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+
            
            ]   }    ) ;
 
@@ -193,6 +198,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
        {eltName: '101', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
        {eltName: '102', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
 
+       {eltName: '110', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '111', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+       {eltName: '112', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+
       ]   }    ) ;
      
 
@@ -218,7 +228,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         container:{container: params.inputContainer,
             properties: { 
             style: { color: 'blue', display: "grid",  "font-size":'11px',
-            'grid-template-columns': 'minmax(50px, auto) repeat(2, 1fr)' , gap: '3px',     
+            'grid-template-columns': 'minmax(60px, auto) repeat(2, 1fr)' , gap: '3px',     
         
         },     textContent : ' ' }, elementType: "div"  } ,
         
@@ -258,9 +268,13 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
        {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
 
 
-       {eltName: '80', params: {properties: {textContent : 'spectre',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: '80', params: {properties: {textContent : 'spectre reduicer',  style: {width:"10px"}}, elementType: "div"  } }  , 
        {eltName: 'spectre', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
        {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+       {eltName: '90', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
+       {eltName: 'count', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
+       {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
    
    ]   }    ) ;
 
@@ -299,7 +313,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
             ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.7]);
-            ops.objects.stor.lightcolors.data = new Float32Array([.9, .0,  0.]);
+            ops.objects.stor.lightcolors.data = new Float32Array([.8, .0,  0.]);
             
               
             // Make ui fot data below. 
@@ -352,9 +366,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                  output.color = colors[vi];
 
 
-                 //  output.light_incidence =   mx_2d_radial_litghtfactor(lightcoords, vxcoord, 0.5 );
-
-                  output.light_incidence =   mx_2d_litght2(lightcoords, vxcoord, 1.9, 4);
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord,  8, 13000);
 
 
                  return output; 
@@ -365,7 +377,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN 
 
               @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
-                  return vec4f(  color_blendSCREEN  ( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
+                  return vec4f(  color_blendSCREEN ( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
               }
             
             ` ;

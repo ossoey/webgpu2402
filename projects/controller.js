@@ -39,7 +39,8 @@ let projects = {};
   flexDirection :"row", 
   flexWrap : "nowrap" , 
   justifyContent : "flex-start", 
-  alignItems : "center"
+  alignItems : "center",
+
 
 }}, elementType: "div"  });
 
@@ -85,14 +86,63 @@ projects.ui.entriesIni = () => {
 
   });
 
-  projects.ui.entries =  EbkUI.createElementFirstPosition_LabeledSelect (  {
+  projects.ui.entries =  EbkUI.createElementAppend_LabeledSelect(  {
  
     options: projectOptions,
-    container: projects.ui.menu,
+    container: projects.ui.title,
      
     labelProperties: { style: {  border: '1px solid #ccc', padding: '12px', margin: '12px' }, text: 'Projects    ' },
     selectProperties: { id: 'projectList', style: { width: '300px', padding: '3px' } }
-   });
+  });
+
+
+  projects.ui.menushow = EbkUI.createAndAppendElement({container: projects.ui.title, properties: {textContent : '...'}, elementType: "button"  }    ) 
+
+  projects.ui.fullscreen = EbkUI.createAndAppendElement({container: projects.ui.title, properties: {textContent : '<full>', style: {margin: '4px'}}, elementType: "button"  }    ) 
+
+
+  projects.ui.save= EbkUI.createAndAppendElement({container: projects.ui.title, properties: {textContent : 'save', style: {margin: '4px'}}, elementType: "button"  }    ) 
+
+
+
+  projects.ui.menushow.addEventListener(`click`,(event)=>{
+
+       if ((projects.ui.menu.style.display === "flex")||(projects.ui.menu.style.display === "")) {
+          projects.ui.menu.style.display = "none"
+       } else {
+          projects.ui.menu.style.display = "flex" 
+       }
+       
+    
+  });
+
+
+  projects.ui.fullscreen.addEventListener(`click`,(event)=>{
+    if (!document.fullscreenElement) {
+      projects.ui.canvas.requestFullscreen().catch(err => {
+          console.error('Failed to enter fullscreen mode:', err);
+      });
+   } else {
+      document.exitFullscreen();
+  }
+
+  projects.ui.canvas.width = window.innerWidth;
+  projects.ui.canvas.height = window.innerHeight;
+ 
+});
+
+  projects.ui.save.addEventListener(`click`,(event)=>{
+
+    let  dataURL = projects.ui.canvas.toDataURL();
+    let link = document.createElement("a");
+    link.href = dataURL;
+    link.download = "canvas_image.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+ 
+ });
+
 
 
    projects.ui.entries.selectElement.addEventListener(`change`,(event)=>{
@@ -106,6 +156,12 @@ projects.ui.entriesIni = () => {
     projects.entries[select.functionId].run();           
     
    });
+
+
+
+
+
+
 
    projects.entries[0].run()
 
