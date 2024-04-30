@@ -30,39 +30,120 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         // Création des ui 
         ops.createUI = () =>{
 
-            let prevWidth = window.innerWidth;
+                let prevWidth = window.innerWidth;
 
-            function adjustGridLayout(gridContainer ) {
-               
+                function adjustGridLayout(gridContainer ) {
                 
-                // Check if screen width is less than or equal to 768px
-                if (window.innerWidth < 600) {
-                  // Set grid template columns to two columns
-                  gridContainer.style['grid-template-columns'] =  'repeat(1, 1fr)' ;
-                } else if (window.innerWidth > 600) {
-                  // Set grid template columns to four columns
-                
-                  gridContainer.style['grid-template-columns'] =  'minmax(23px, auto) repeat(2, 1fr)' ;
+                    
+                    // Check if screen width is less than or equal to 768px
+                    if (window.innerWidth < 600) {
+                    // Set grid template columns to two columns
+                    gridContainer.style['grid-template-columns'] =  'repeat(1, 1fr)' ;
+                    } else if (window.innerWidth > 600) {
+                    // Set grid template columns to four columns
+                    
+                    gridContainer.style['grid-template-columns'] =  'minmax(23px, auto) repeat(2, 1fr)' ;
+                    }
+
+
+                    
                 }
+        
+                params.inputContainer.innerHTML = "" 
+        
+                EbkUI.editElement({ element:  params.inputContainer,   properties:{  style: {
+        
+                    display : "flex", 
+                    flexDirection :"row", 
+                    flexWrap : "nowrap" , 
+                    justifyContent : "flex-start", 
+                    alignItems : "center",
+                    padding: '10px 0px 0px 30px'
+                }}});
 
 
-                 
-              }
-    
-            params.inputContainer.innerHTML = "" 
-    
-            EbkUI.editElement({ element:  params.inputContainer,   properties:{  style: {
-    
-                display : "flex", 
-                flexDirection :"row", 
-                flexWrap : "nowrap" , 
-                justifyContent : "flex-start", 
-                alignItems : "center",
-                padding: '10px 0px 0px 30px'
-              }}});
+                ops.ui.objectElements = EbkUI.createElementsInContainer({ 
+                    container:{container: params.inputContainer,
+                        properties: { 
+                        style: { color: 'blue', display: "grid",  "font-size":'11px',
+                        'grid-template-columns': 'minmax(23px, auto) repeat(2, 1fr)' , gap: '3px',     
+                    
+                    },     textContent : ' ' }, elementType: "div"  } ,
+                    
+            
+                elements: [
+                {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+                {eltName: '01', params: {properties: {textContent : 'Object'}, elementType: "div"  } } , 
+                {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+                {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+                {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
+                {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+
+                {eltName: '10', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+                {eltName: '20', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'positionXStart', params: {properties: {type : "range",  min:"-1", max:"1", value:"0", step:"0.01",   style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: 'positionXEnd', params: {properties: {type : "range", min:"-1", max:"1", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+                {eltName: '30', params: {properties: {textContent : 'y',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'positionYStart', params: {properties: {type : "range" ,  min:"-1", max:"1", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: 'positionYEnd', params: {properties: {type : "range" ,  min:"-1", max:"1", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+                {eltName: '40', params: {properties: {textContent : 'size',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'sizeStart', params: {properties: {type : "range" ,  min:"0.01", max:"0.4", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: 'sizeEnd', params: {properties: {type : "range",  min:"0.01", max:"0.4", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+                {eltName: '50', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'count', params: {properties: {type : "range",  min:"2", max:"200000", value:"1", step:"0.01", style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+                {eltName: '60', params: {properties: {textContent : 'phase',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'phaseStart', params: {properties: {type : "range",  min:"0", max:"6.28", value:"0", step:"0.01",  style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: 'phaseEnd', params: {properties: {type : "range",  min:"0", max:"6.28", value:"0", step:"0.01",  style: {width:"50px"} }, elementType: "input"  }  } , 
+            
+                
+                {eltName: '70', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: '71', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+                {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+                {eltName: '80', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+                {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+            
+                {eltName: '90', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+                {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
 
 
-          let objectElements = EbkUI.createElementsInContainer({ 
+            
+            ]   }    ) ;
+
+
+            ops.ui.objectElements.colorStart.value = EbkColors.rgbToHexa({color:[130, 255, 188] });
+            ops.ui.objectElements.colorEnd.value = EbkColors.rgbToHexa({color:[255, 200, 50] });
+
+
+            ops.ui.objectElements.positionXStart.value = -1;
+            ops.ui.objectElements.positionXEnd.value = 1;
+
+            ops.ui.objectElements.positionYStart.value = -1;
+            ops.ui.objectElements.positionYEnd.value = 1;
+
+            ops.ui.objectElements.sizeStart.value = 0.01;
+            ops.ui.objectElements.sizeEnd.value = 0.4;
+
+            ops.ui.objectElements.count.value = 10;
+            
+            ops.ui.objectElements.phaseStart.value = 0;
+            ops.ui.objectElements.phaseEnd.value = 6.28;
+
+
+
+
+            let vertexElementsSpace = EbkUI.createElementsInContainer({ 
                 container:{container: params.inputContainer,
                     properties: { 
                     style: { color: 'blue', display: "grid",  "font-size":'11px',
@@ -70,60 +151,87 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 
                 },     textContent : ' ' }, elementType: "div"  } ,
                 
-           
+        
             elements: [
-               {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-               {eltName: '01', params: {properties: {textContent : 'Object'}, elementType: "div"  } } , 
-               {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+            {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+            {eltName: '01', params: {properties: {textContent : ' '}, elementType: "div"  } } , 
+            {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
 
-               {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-               {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
-               {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
-
-               {eltName: '10', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
-               {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-               {eltName: '20', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: 'positionXStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-               {eltName: 'positionXEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-               {eltName: '30', params: {properties: {textContent : 'y',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: '31', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-               {eltName: '32', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-               {eltName: '40', params: {properties: {textContent : 'size',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: 'sizeStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-               {eltName: 'sizeEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-               {eltName: '50', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: 'count', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-               {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-               {eltName: '60', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: '61', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-               {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
         
-               
-               {eltName: '70', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: '71', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-               {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+        ]   }    ) ;
 
-               {eltName: '80', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-               {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+        ops.ui.vertexElements = EbkUI.createElementsInContainer({ 
+            container:{container: params.inputContainer,
+                properties: { 
+                style: { color: 'blue', display: "grid",  "font-size":'11px',
+                'grid-template-columns': 'minmax(45px, auto) repeat(2, 1fr)' , gap: '3px',     
+            
+            },     textContent : ' ' }, elementType: "div"  } ,
+            
+    
+        elements: [
+        {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+        {eltName: '01', params: {properties: {textContent : 'Vertex'}, elementType: "div"  } } , 
+        {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+        {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+        {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
+        {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+
+        {eltName: '20', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '30', params: {properties: {textContent : 'roughness',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'roughnessStart', params: {properties: {type : "range" ,  min:"3", max:"16", value:"0", step:"1", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'roughnessEnd', params: {properties: {type : "range",  min:"3", max:"16", value:"0", step:"1",  style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '40', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '41', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '42', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+        {eltName: '50', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '51', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+
+        {eltName: '60', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '61', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
         
-               {eltName: '90', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-               {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-               {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+        {eltName: '70', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '71', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
 
 
-           
-           ]   }    ) ;
+        {eltName: '80', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+    
+        {eltName: '90', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+        {eltName: '100', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '101', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '102', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+        {eltName: '110', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: '111', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
+        {eltName: '112', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+
+        ]   }    ) ;
+        
+
+        ops.ui.vertexElements.colorStart.value = EbkColors.rgbToHexa({color:[255, 255, 255] });
+        ops.ui.vertexElements.colorEnd.value = EbkColors.rgbToHexa({color:[50, 75, 255] });
+        ops.ui.vertexElements.roughnessStart.value = 4;  
+        ops.ui.vertexElements.roughnessEnd.value = 16;  
 
 
-
-           let vertexElementsSpace = EbkUI.createElementsInContainer({ 
+        let vertexElementsSpace1 = EbkUI.createElementsInContainer({ 
             container:{container: params.inputContainer,
                 properties: { 
                 style: { color: 'blue', display: "grid",  "font-size":'11px',
@@ -131,156 +239,94 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             
             },     textContent : ' ' }, elementType: "div"  } ,
             
-       
+    
         elements: [
-           {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-           {eltName: '01', params: {properties: {textContent : ' '}, elementType: "div"  } } , 
-           {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+        {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+        {eltName: '01', params: {properties: {textContent : ' '}, elementType: "div"  } } , 
+        {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
 
-       
-       ]   }    ) ;
+    
+        ]   }    ) ;
 
 
-       let vertexElements = EbkUI.createElementsInContainer({ 
-        container:{container: params.inputContainer,
-            properties: { 
-            style: { color: 'blue', display: "grid",  "font-size":'11px',
-            'grid-template-columns': 'minmax(45px, auto) repeat(2, 1fr)' , gap: '3px',     
+        ops.ui.lightElements = EbkUI.createElementsInContainer({ 
+            container:{container: params.inputContainer,
+                properties: { 
+                style: { color: 'blue', display: "grid",  "font-size":'11px',
+                'grid-template-columns': 'minmax(60px, auto) repeat(2, 1fr)' , gap: '3px',     
+            
+            },     textContent : ' ' }, elementType: "div"  } ,
+            
+    
+        elements: [
+        {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+        {eltName: '01', params: {properties: {textContent : 'Light'}, elementType: "div"  } } , 
+        {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+
+        {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
+        {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
+        {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+
+        {eltName: '20', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '30', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'positionXStart', params: {properties: {type : "range" ,  min:"-1", max:"1", value:"0", step:"0.01",  style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'positionXEnd', params: {properties: {type : "range" ,  min:"-1", max:"1", value:"0", step:"0.01",  style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '40', params: {properties: {textContent : 'y',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'positionYStart', params: {properties: {type : "range" , min:"-1", max:"1", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'positionYEnd', params: {properties: {type : "range", min:"-1", max:"1", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '50', params: {properties: {textContent : 'type',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'typeStart', params: {properties: {type : "range" , min:"1", max:"4", value:"1", step:"1",  style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'typeEnd', params: {properties: {type : "range", min:"1", max:"4", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '60', params: {properties: {textContent : 'composition',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'compositionStart', params: {properties: {type : "range", min:"1", max:"4", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'compositionEnd', params: {properties: {type : "range", min:"1", max:"4", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+
+        {eltName: '70', params: {properties: {textContent : 'intensity',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'intensityStart', params: {properties: {type : "range", min:"1", max:"100", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'intensityEnd', params: {properties: {type : "range", min:"1", max:"100", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+
+        {eltName: '80', params: {properties: {textContent : 'spectre reduicer',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'spectreReduicerStart', params: {properties: {type : "range", min:"0", max:"10000000000", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'spectreReduicerEnd', params: {properties: {type : "range", min:"0", max:"10000000000", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  }  } , 
+
+        {eltName: '90', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
+        {eltName: 'count', params: {properties: {type : "range", min:"1", max:"100", value:"1", step:"1",  style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
+    
+        ]   }    ) ;
+
+
+        ops.ui.lightElements.colorStart.value = EbkColors.rgbToHexa({color:[200, 10, 20] });
+        ops.ui.lightElements.colorEnd.value = EbkColors.rgbToHexa({color:[125, 130, 140] });
+
+        ops.ui.lightElements.positionXStart.value = -1;
+        ops.ui.lightElements.positionXEnd.value = 1;
+
+        ops.ui.lightElements.positionYStart.value = -1;
+        ops.ui.lightElements.positionYEnd.value = 1;
+
+        ops.ui.lightElements.typeStart.value = 1;
+        ops.ui.lightElements.typeEnd.value = 4;
+
+        ops.ui.lightElements.compositionStart.value = 1;
+        ops.ui.lightElements.compositionEnd.value = 4;
+
         
-        },     textContent : ' ' }, elementType: "div"  } ,
-        
-   
-    elements: [
-       {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-       {eltName: '01', params: {properties: {textContent : 'Vertex'}, elementType: "div"  } } , 
-       {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
+        ops.ui.lightElements.intensityStart.value = 1;
+        ops.ui.lightElements.intensityEnd.value = 100;
 
-       {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-       {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
-       {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
+        ops.ui.lightElements.spectreReduicerStart.value = 0;
+        ops.ui.lightElements.spectreReduicerEnd.value = 10000000000;
 
-       {eltName: '20', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '21', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: '22', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '30', params: {properties: {textContent : 'roughness',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'roughnessStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: 'roughnessStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '40', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '41', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '42', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-       {eltName: '50', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '51', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-
-       {eltName: '60', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '61', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-       
-       {eltName: '70', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '71', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-
-       {eltName: '80', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '81', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-   
-       {eltName: '90', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-       {eltName: '100', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '101', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '102', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-       {eltName: '110', params: {properties: {textContent : '.',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: '111', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
-       {eltName: '112', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-
-
-      ]   }    ) ;
-     
-
-      let vertexElementsSpace1 = EbkUI.createElementsInContainer({ 
-        container:{container: params.inputContainer,
-            properties: { 
-            style: { color: 'blue', display: "grid",  "font-size":'11px',
-            'grid-template-columns': 'minmax(23px, auto) repeat(2, 1fr)' , gap: '3px',     
-        
-        },     textContent : ' ' }, elementType: "div"  } ,
-        
-   
-    elements: [
-       {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-       {eltName: '01', params: {properties: {textContent : ' '}, elementType: "div"  } } , 
-       {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
-
-   
-   ]   }    ) ;
-
-
-      let lightElements = EbkUI.createElementsInContainer({ 
-        container:{container: params.inputContainer,
-            properties: { 
-            style: { color: 'blue', display: "grid",  "font-size":'11px',
-            'grid-template-columns': 'minmax(60px, auto) repeat(2, 1fr)' , gap: '3px',     
-        
-        },     textContent : ' ' }, elementType: "div"  } ,
-        
-   
-    elements: [
-       {eltName: '00', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-       {eltName: '01', params: {properties: {textContent : 'Light'}, elementType: "div"  } } , 
-       {eltName: '02', params: {properties: {textContent : ''}, elementType: "div"  } } , 
-
-       {eltName: '10', params: {properties: {textContent : ' '}, elementType: "div"  } }  , 
-       {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
-       {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
-
-       {eltName: '20', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '30', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'positionXStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: 'positionXEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '40', params: {properties: {textContent : 'y',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'positionYStart', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: 'positionYEnd', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '50', params: {properties: {textContent : 'type',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'type', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '60', params: {properties: {textContent : 'composition',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'composition', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: '62', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-
-       {eltName: '70', params: {properties: {textContent : 'intensity',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'intensity', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: '72', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-
-       {eltName: '80', params: {properties: {textContent : 'spectre reduicer',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'spectre', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: '82', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  }  } , 
-
-       {eltName: '90', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
-       {eltName: 'count', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "input"  } } , 
-       {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
-   
-   ]   }    ) ;
-
-         
-
-
+        ops.ui.lightElements.count.value = 3;
 
         //   window.addEventListener('resize', adjustGridLayout.bind(null,objectElements.container));
 
@@ -366,7 +412,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                  output.color = colors[vi];
 
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord,  8, 13000);
+                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord,  1.6, 3);
 
 
                  return output; 
