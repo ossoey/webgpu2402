@@ -16,7 +16,7 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
     #process;
   
     
-    constructor(params ={ beltVtxCount: 6, instanceCount: 10, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  }  }) {
+    constructor(params ={ beltVtxCount: 6, instanceCount: 10, colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, -0.92 ], height: [-0.92, -0.92 ]  },  sises:  [0.01, 0.4 ]   }) {
                
         this.name = `Ebk.Geometry.Polygon`;            
                     
@@ -33,7 +33,7 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
   
     }
     
-    _update(params = { beltVtxCount: 6, instanceCount: 10,  colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  } }){
+    _update(params = { beltVtxCount: 6, instanceCount: 10,  colors: {start: [0.2, 0.21, 0.23] , end: [0.8, 0.81, 0.93]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  },  sises:  [0.01, 0.4 ]  }){
         
         this.#params =  Object.assign(this.#params,  params );
         this.#cirFndVtxCountGen(); 
@@ -85,6 +85,11 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
         let y =  Ebk.Rand.fRanges({ranges:[[this.#params.offsets.height[0], this.#params.offsets.height[1]]], clamps:[[0,1]]}); 
        
         return {x, y};
+    }
+
+    sizesRand() {
+           
+        return Ebk.Rand.fRanges({ranges:[[this.#params.sizes[0], this.#params.sizes[1]]], clamps:[[0,1]]});
     }
 
     coordsCenter(params = { phase:0}) {
@@ -177,6 +182,13 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
         buffer[2*instanceNdx +1 ] = record.y; 
     }
 
+    #create_bufferDataSizesRecords(buffer, instanceNdx  ) {
+
+    
+        buffer[instanceNdx] = this.sizesRand(); 
+    
+    }
+
     create_buffersData( params = { phase:0}) {
 
        // this.coordsCenter(params = { phase:params.phase});
@@ -185,6 +197,8 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
         this.buffersData.colors = new Float32Array(this.vtxCount()*4); 
         this.buffersData.offsets = new Float32Array(this.#params.instanceCount*2);  
         
+        this.buffersData.sizes = new Float32Array(this.#params.instanceCount);  
+
 
         for(let beltNdx = 0; beltNdx < this.#params.beltVtxCount; beltNdx ++ ) {
               
@@ -199,6 +213,7 @@ Ebk.Geometry.PolygonVtxUindexed = class EbkGeometryPolygonVtxUindexed {
               
             this.#create_bufferDataOffsetsRecords(  this.buffersData.offsets, instanceNdx  )
 
+             this.#create_bufferDataSizesRecords(this.buffersData.sizes, instanceNdx  );
         }
 
    }
