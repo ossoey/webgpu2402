@@ -80,9 +80,9 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
                 {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
 
-                {eltName: '10', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
-                {eltName: 'colorStart', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
-                {eltName: 'colorEnd', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  }  } , 
+                {eltName: '10_0', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: 'bgColor', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: '12_0', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "div"  }  } , 
 
                 {eltName: '20', params: {properties: {textContent : 'x',  style: {width:"10px"}}, elementType: "div"  } }  , 
                 {eltName: 'positionXStart', params: {properties: {type : "range",  min:"-1", max:"1", value:"0", step:"0.01",   style: {width:"50px"} }, elementType: "input"  } } , 
@@ -97,7 +97,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 {eltName: 'sizeEnd', params: {properties: {type : "range",  min:"0.01", max:"0.4", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  }  } , 
 
                 {eltName: '50', params: {properties: {textContent : 'count',  style: {width:"10px"}}, elementType: "div"  } }  , 
-                {eltName: 'count', params: {properties: {type : "range",  min:"2", max:"200000", value:"1", step:"0.01", style: {width:"50px"} }, elementType: "input"  } } , 
+                {eltName: 'count', params: {properties: {type : "range",  min:"2", max:"10000", value:"1", step:"1", style: {width:"100px"} }, elementType: "input"  } } , 
                 {eltName: '52', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
 
                 {eltName: '60', params: {properties: {textContent : 'phase',  style: {width:"10px"}}, elementType: "div"  } }  , 
@@ -117,13 +117,15 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 {eltName: '91', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  } } , 
                 {eltName: '92', params: {properties: {type : "range", style: {width:"50px"} }, elementType: "div"  }  } , 
 
-
             
             ]   }    ) ;
 
 
-            ops.ui.objectElements.colorStart.value = EbkColors.rgbToHexa({color:[130, 255, 188] });
-            ops.ui.objectElements.colorEnd.value = EbkColors.rgbToHexa({color:[255, 200, 50] });
+            ops.ui.objectElements.bgColor.value = EbkColors.rgbToHexa({color:[125, 125, 125] });
+            //ops.ui.objectElements.colorEnd.value = EbkColors.rgbToHexa({color:[255, 200, 50] });
+
+            
+   
 
 
             ops.ui.objectElements.positionXStart.value = -1;
@@ -140,6 +142,20 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.ui.objectElements.phaseStart.value = 0;
             ops.ui.objectElements.phaseEnd.value = 6.28;
 
+            ops.ui.objectElements.bgColor.addEventListener('change', ()=>{ ops.edit(); });
+
+            ops.ui.objectElements.count.addEventListener('change', ()=>{ ops.edit(); });
+               
+            ops.ui.objectElements.positionXStart.addEventListener('change', ()=>{ ops.edit();});
+            
+            ops.ui.objectElements.positionXEnd.addEventListener('change', ()=>{ops.edit(); });
+   
+            ops.ui.objectElements.positionYStart.addEventListener('change', ()=>{ ops.edit();});
+            
+            ops.ui.objectElements.positionYEnd.addEventListener('change', ()=>{ops.edit(); });
+   
+
+           
 
 
 
@@ -227,8 +243,15 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
         ops.ui.vertexElements.colorStart.value = EbkColors.rgbToHexa({color:[255, 255, 255] });
         ops.ui.vertexElements.colorEnd.value = EbkColors.rgbToHexa({color:[50, 75, 255] });
-        ops.ui.vertexElements.roughnessStart.value = 4;  
+        ops.ui.vertexElements.roughnessStart.value = 3;  
         ops.ui.vertexElements.roughnessEnd.value = 16;  
+
+        
+        ops.ui.vertexElements.colorStart.addEventListener('change', ()=>{ ops.edit(); });
+        ops.ui.vertexElements.colorEnd.addEventListener('change', ()=>{ ops.edit(); });
+
+        ops.ui.vertexElements.roughnessStart.addEventListener('change', ()=>{ ops.edit(); });
+        ops.ui.vertexElements.roughnessEnd.addEventListener('change', ()=>{ ops.edit(); });
 
 
         let vertexElementsSpace1 = EbkUI.createElementsInContainer({ 
@@ -328,6 +351,16 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
         ops.ui.lightElements.count.value = 3;
 
+
+        ops.ui.lightElements.colorStart.addEventListener('change', ()=>{ ops.edit(); });
+
+        ops.ui.lightElements.positionXStart.addEventListener('change', ()=>{ ops.edit(); });
+        ops.ui.lightElements.positionXEnd.addEventListener('change', ()=>{ ops.edit(); });
+
+        ops.ui.lightElements.positionYStart.addEventListener('change', ()=>{ ops.edit(); });
+        ops.ui.lightElements.positionYEnd.addEventListener('change', ()=>{ ops.edit(); });
+
+
         //   window.addEventListener('resize', adjustGridLayout.bind(null,objectElements.container));
 
 
@@ -338,10 +371,25 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         // Initialiser les structures de données. 
         ops.iniDataStructures = () => {
 
+            let color1Nlzd = EbkColors.hexToRGBNrmzd ( {hexaColor: ops.ui.vertexElements.colorStart.value} );
+            let color2Nlzd = EbkColors.hexToRGBNrmzd ( {hexaColor: ops.ui.vertexElements.colorEnd.value} );
+
+ 
+    
+
             ops.objects.stor = {};
             ops.objects.geometry = {};
     
-            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:16, instanceCount: 2000,colors: {start: [0.3, 0.5, 0.53] , end: [0, 0, 1]}, offsets: {width: [-0.92, 0.92 ], height: [-0.92, 0.92 ]  }});
+            ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:Ebk.Rand.iRanges({
+                                                         ranges:[[Number(ops.ui.vertexElements.roughnessStart.value), Number(ops.ui.vertexElements.roughnessEnd.value)]], 
+                                                         clamps:[[0,1]]}),
+                                                            instanceCount: ops.ui.objectElements.count.value,
+                                                 colors: {start: [color1Nlzd[0], color1Nlzd[1], color1Nlzd[2]] ,
+                                                         end: [color2Nlzd[0], color2Nlzd[1], color2Nlzd[2]]}, 
+                                                 offsets: {width: [Number(ops.ui.objectElements.positionXStart.value),  Number(ops.ui.objectElements.positionXEnd.value) ],
+                                                     height: [Number(ops.ui.objectElements.positionYStart.value), Number(ops.ui.objectElements.positionYEnd.value) ]  }});
+
+
 
             ops.objects.geometry.polygon.create_buffersData({phase: -0.063});
             ops.objects.vtxCount = ops.objects.geometry.polygon.vtxCount();
@@ -358,8 +406,22 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
-            ops.objects.stor.lightcoords.data = new Float32Array([-0.5, 0.7]);
-            ops.objects.stor.lightcolors.data = new Float32Array([.8, .0,  0.]);
+
+            let lightColor = EbkColors.hexToRGBNrmzd ( {hexaColor:  ops.ui.lightElements.colorStart.value} );
+
+        
+            ops.objects.stor.lightcoords.data = new Float32Array([
+                
+                Ebk.Rand.iRanges({
+                    ranges:[[Number( ops.ui.lightElements.positionXStart.value), Number(ops.ui.lightElements.positionXEnd.value)]], 
+                    clamps:[[0,1]]}),
+                
+                    Ebk.Rand.iRanges({
+                        ranges:[[Number(ops.ui.lightElements.positionYStart.value), Number(ops.ui.lightElements.positionYEnd.value)]], 
+                        clamps:[[0,1]]})]);
+
+
+            ops.objects.stor.lightcolors.data = new Float32Array([lightColor[0], lightColor[1],  lightColor[2]]);
             
               
             // Make ui fot data below. 
@@ -374,8 +436,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
 
-       
-
+    
 
         }
     
@@ -636,11 +697,13 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // dessiner
         ops.draw = () => {
+
+            let color1Nlzd = EbkColors.hexToRGBNrmzd ( {hexaColor:  ops.ui.objectElements.bgColor.value} );
     
             let renderPassDesc = {
                 colorAttachments: [
                     { 
-                        clearValue: [0.5, 0.5, 0.5, 1.0], 
+                        clearValue: [color1Nlzd[0], color1Nlzd[1], color1Nlzd[2], 1.0], 
                         loadOp : "clear", 
                         storeOp: "store", 
                         view: ops.env.context.getCurrentTexture().createView()
@@ -671,6 +734,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // Exécuter le programme. 
     
+        
         ops.run = async () =>{
     
             try {
@@ -690,7 +754,29 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             }
     
             ops.draw();
+            
+        }
+
+        ops.edit = async () =>{
+
+            ops.release();
     
+            try {
+                ops.iniDataStructures();
+                ops.iniData();
+    
+                await ops.iniWEBGPU();
+                ops.configPipeline();
+                
+            }
+            catch(e) {
+                  
+               alert(e.message);
+               return;
+    
+            }
+    
+            ops.draw();
             
         }
     
