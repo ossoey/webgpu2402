@@ -80,7 +80,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                 {eltName: '11', params: {properties: {textContent : 'Start'}, elementType: "div"  } } , 
                 {eltName: '12', params: {properties: {textContent : 'End'}, elementType: "div"  } } , 
 
-                {eltName: '10_0', params: {properties: {textContent : 'color',  style: {width:"10px"}}, elementType: "div"  } }  , 
+                {eltName: '10_0', params: {properties: {textContent : 'bg color',  style: {width:"10px"}}, elementType: "div"  } }  , 
                 {eltName: 'bgColor', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "input"  } } , 
                 {eltName: '12_0', params: {properties: {type : "color", style: {width:"50px"} }, elementType: "div"  }  } , 
 
@@ -155,7 +155,8 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.ui.objectElements.positionYEnd.addEventListener('change', ()=>{ops.edit(); });
    
 
-           
+            ops.ui.objectElements.sizeStart.addEventListener('change', ()=>{ops.edit(); });
+            ops.ui.objectElements.sizeEnd.addEventListener('change', ()=>{ops.edit(); });
 
 
 
@@ -383,6 +384,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.geometry.polygon = new   Ebk.Geometry.PolygonVtxUindexed ({beltVtxCount:Ebk.Rand.iRanges({
                                                          ranges:[[Number(ops.ui.vertexElements.roughnessStart.value), Number(ops.ui.vertexElements.roughnessEnd.value)]], 
                                                          clamps:[[0,1]]}),
+                                                         sizes: [Number(ops.ui.objectElements.sizeStart.value), Number(ops.ui.objectElements.sizeEnd.value)], 
                                                             instanceCount: ops.ui.objectElements.count.value,
                                                  colors: {start: [color1Nlzd[0], color1Nlzd[1], color1Nlzd[2]] ,
                                                          end: [color2Nlzd[0], color2Nlzd[1], color2Nlzd[2]]}, 
@@ -402,10 +404,13 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             ops.objects.stor.lightcoords = {};
             ops.objects.stor.lightcolors = {};
 
+            ops.objects.stor.sizes = {};
+
 
             ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
+            ops.objects.stor.sizes.data = ops.objects.geometry.polygon.buffersData.sizes;
 
             let lightColor = EbkColors.hexToRGBNrmzd ( {hexaColor:  ops.ui.lightElements.colorStart.value} );
 
@@ -454,6 +459,8 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                @group(0) @binding(3) var <storage> lightcoords: vec2f;
                @group(0) @binding(4) var <storage> lightcolors: vec3f;
 
+               @group(0) @binding(5) var <storage> sizes: array<f32>;
+
 
                struct VertexTransfer {
 
@@ -467,7 +474,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
                  var output : VertexTransfer;
                  
-                 var vxcoord = 0.06*coords[vi] + offsets[ii];
+                 var vxcoord =  sizes[ii]*coords[vi] + offsets[ii];
 
                  output.pos = vec4f( vxcoord  ,0, 1);
                  output.color = colors[vi];
@@ -570,8 +577,14 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                         
                     }  , 
 
-
-
+                    {    // light color
+                        binding: 5 , 
+                        visibility: GPUShaderStage.VERTEX , 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
 
                 
                 ]
@@ -623,6 +636,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
             ops.env.device.queue.writeBuffer(ops.objects.stor.colors.buffer , 0 , ops.objects.stor.colors.data);
 
+
             ops.objects.stor.offsets.buffer =  ops.env.device.createBuffer(
                 {
                     label: `Buffer offsets${ops.desc}`, 
@@ -632,6 +646,17 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
             );
 
             ops.env.device.queue.writeBuffer(ops.objects.stor.offsets.buffer , 0 , ops.objects.stor.offsets.data);
+
+
+            ops.objects.stor.sizes.buffer =  ops.env.device.createBuffer(
+                {
+                    label: `Buffer offsets${ops.desc}`, 
+                    size:  ops.objects.stor.sizes.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.sizes.buffer , 0 , ops.objects.stor.sizes.data);
 
 
 
@@ -687,7 +712,10 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                     resource: { buffer:  ops.objects.stor.lightcolors.buffer, offset: 0, size: 4*3}
                   } , 
 
-
+                  {
+                    binding: 5, // Corresponds to the binding 0 in the layout.
+                    resource: { buffer:   ops.objects.stor.sizes.buffer, offset: 0, size: ops.objects.count*4}
+                  } , 
                 ]
              });
 
