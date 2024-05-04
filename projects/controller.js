@@ -54,10 +54,10 @@ let projects = {};
  projects.entries = [
 
   polygone_upload_data_bndgroup_only_basics2(projects.paramsIn),
-  polygone_upload_data_bndgroup_only_basics1(projects.paramsIn),
-  polygone_upload_data_bndgroup_only_basicsO(projects.paramsIn),
-  polygone_upload_data_bndgroup_only_basics(projects.paramsIn),
-  polygone_upload_data1(projects.paramsIn),
+ // polygone_upload_data_bndgroup_only_basics1(projects.paramsIn),
+ // polygone_upload_data_bndgroup_only_basicsO(projects.paramsIn),
+ // polygone_upload_data_bndgroup_only_basics(projects.paramsIn),
+ // polygone_upload_data1(projects.paramsIn),
   
   
   squareInGrid(projects.paramsIn),
