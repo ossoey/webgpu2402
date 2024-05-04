@@ -1948,6 +1948,31 @@ Ebk.Matrix.shaderUtils =
 
     }
 
+
+    fn mx_2d_litght_selector(ltype: u32, light: vec2f, vertex: vec2f, intensity: f32 , spectre: f32  )->f32 {
+
+        var factor : f32; 
+           
+        if ltype == 0 {
+
+            factor = mx_2d_litght(light, vertex, intensity, spectre);
+
+        } else if ltype == 1 {
+            factor = mx_2d_litght00(light, vertex, intensity, spectre);
+        } else if ltype == 2 {
+            factor = mx_2d_litght01(light, vertex, intensity, spectre);
+        } else if ltype == 3 {
+            factor = mx_2d_litght02(light, vertex, intensity, spectre);
+        }
+
+        else {
+            factor = mx_2d_litght(light, vertex, intensity, spectre);
+        }
+        
+        return factor; 
+
+    }
+
 `
 
 

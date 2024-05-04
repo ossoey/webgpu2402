@@ -304,8 +304,8 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         {eltName: 'positionYEnd', params: {properties: {type : "range", min:"-1", max:"1", value:"0", step:"0.01", style: {width:"50px"} }, elementType: "input"  }  } , 
 
         {eltName: '50', params: {properties: {textContent : 'type',  style: {width:"10px"}}, elementType: "div"  } }  , 
-        {eltName: 'typeStart', params: {properties: {type : "range" , min:"1", max:"4", value:"1", step:"1",  style: {width:"50px"} }, elementType: "input"  } } , 
-        {eltName: 'typeEnd', params: {properties: {type : "range", min:"1", max:"4", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  }  } , 
+        {eltName: 'typeStart', params: {properties: {type : "range" , min:"0", max:"4", value:"1", step:"1",  style: {width:"50px"} }, elementType: "input"  } } , 
+        {eltName: 'typeEnd', params: {properties: {type : "range", min:"0", max:"4", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  }  } , 
 
         {eltName: '60', params: {properties: {textContent : 'composition',  style: {width:"10px"}}, elementType: "div"  } }  , 
         {eltName: 'compositionStart', params: {properties: {type : "range", min:"1", max:"4", value:"1", step:"1", style: {width:"50px"} }, elementType: "input"  } } , 
@@ -361,6 +361,19 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         ops.ui.lightElements.positionYStart.addEventListener('change', ()=>{ ops.edit(); });
         ops.ui.lightElements.positionYEnd.addEventListener('change', ()=>{ ops.edit(); });
 
+        ops.ui.lightElements.typeStart.addEventListener('change', ()=>{ ops.edit(); }); 
+
+        ops.ui.lightElements.typeEnd.addEventListener('change', ()=>{ ops.edit(); }); 
+
+        ops.ui.lightElements.compositionStart.addEventListener('change', ()=>{ ops.edit(); }); 
+        ops.ui.lightElements.compositionEnd.addEventListener('change', ()=>{ ops.edit(); }); 
+
+        ops.ui.lightElements.intensityStart.addEventListener('change', ()=>{ ops.edit(); }); 
+        ops.ui.lightElements.intensityEnd.addEventListener('change', ()=>{ ops.edit(); }); 
+
+        ops.ui.lightElements.spectreReduicerStart.addEventListener('change', ()=>{ ops.edit(); }); 
+        ops.ui.lightElements.spectreReduicerEnd.addEventListener('change', ()=>{ ops.edit(); }); 
+
 
         //   window.addEventListener('resize', adjustGridLayout.bind(null,objectElements.container));
 
@@ -406,11 +419,23 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
             ops.objects.stor.sizes = {};
 
+            
+            ops.objects.stor.lightparams = {};
+
 
             ops.objects.stor.coords.data =  ops.objects.geometry.polygon.buffersData.coords;
             ops.objects.stor.colors.data =  ops.objects.geometry.polygon.buffersData.colors;
             ops.objects.stor.offsets.data = ops.objects.geometry.polygon.buffersData.offsets; 
             ops.objects.stor.sizes.data = ops.objects.geometry.polygon.buffersData.sizes;
+
+            ops.objects.stor.lightparams.array = [Number(ops.ui.lightElements.typeStart.value),
+                Number(ops.ui.lightElements.compositionStart.value),
+                Number(ops.ui.lightElements.intensityStart.value),
+                Number(ops.ui.lightElements.spectreReduicerStart.value)
+       
+               ];
+
+            ops.objects.stor.lightparams.data = new Float32Array(ops.objects.stor.lightparams.array);
 
             let lightColor = EbkColors.hexToRGBNrmzd ( {hexaColor:  ops.ui.lightElements.colorStart.value} );
 
@@ -460,7 +485,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                @group(0) @binding(4) var <storage> lightcolors: vec3f;
 
                @group(0) @binding(5) var <storage> sizes: array<f32>;
-
+               @group(0) @binding(6) var <storage> lightparams: array<f32>;
 
                struct VertexTransfer {
 
@@ -480,7 +505,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                  output.color = colors[vi];
 
 
-                  output.light_incidence =   mx_2d_litght(lightcoords, vxcoord,  1.6, 3);
+                 output.light_incidence =   mx_2d_litght_selector(u32(lightparams[0]), lightcoords, vxcoord,  lightparams[2], lightparams[3]);
 
 
                  return output; 
@@ -579,6 +604,16 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                     {    // light color
                         binding: 5 , 
+                        visibility: GPUShaderStage.VERTEX , 
+                        buffer: {
+                            type: "read-only-storage"    
+                        }
+                        
+                    }  , 
+
+
+                    {    // light color
+                        binding: 6 , 
                         visibility: GPUShaderStage.VERTEX , 
                         buffer: {
                             type: "read-only-storage"    
@@ -686,6 +721,21 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
 
 
+            
+            ops.objects.stor.lightparams.buffer =  ops.env.device.createBuffer(
+                {
+                    label: `Buffer offsets${ops.desc}`, 
+                    size: ops.objects.stor.lightparams.data.byteLength, 
+                    usage: GPUBufferUsage.STORAGE |  GPUBufferUsage.COPY_DST
+                }
+            );
+
+            ops.env.device.queue.writeBuffer(ops.objects.stor.lightparams.buffer , 0 , ops.objects.stor.lightparams.data);
+
+
+
+
+
             ops.env.bindGroup = ops.env.device.createBindGroup({
                 layout: ops.env.bindGroupLayout,
                 entries: [ 
@@ -716,9 +766,15 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
                     binding: 5, // Corresponds to the binding 0 in the layout.
                     resource: { buffer:   ops.objects.stor.sizes.buffer, offset: 0, size: ops.objects.count*4}
                   } , 
+
+                  {
+                    binding: 6, // Corresponds to the binding 0 in the layout.
+                    resource: { buffer:  ops.objects.stor.lightparams.buffer, offset: 0, size: 4*ops.objects.stor.lightparams.array.length}
+                  } , 
                 ]
              });
 
+             
 
             
         }
