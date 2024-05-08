@@ -1942,7 +1942,7 @@ Ebk.Matrix.shaderUtils =
 
         var distance = mx_2d_distance(light, vertex);
 
-        factor =intensity/(1 + distance*pow(spectre, distance)) ;
+        factor =intensity/(1 + distance* pow(spectre, distance)) ;
         
         return factor; 
 

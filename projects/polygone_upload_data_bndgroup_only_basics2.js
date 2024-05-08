@@ -491,33 +491,101 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                  @builtin(position) pos : vec4f, 
                  @location(0) color: vec3f, 
-                 @location(1) light_incidence: f32
+               
 
                }
-               
+
+   
+
                @vertex fn vs(@builtin(instance_index) ii : u32, @builtin(vertex_index) vi : u32)-> VertexTransfer {
     
-                 var output : VertexTransfer;
-                 
-                 var vxcoord =  sizes[ii]*coords[vi] + offsets[ii];
+                var output : VertexTransfer;
+                
+                var vxcoord =  sizes[ii]*coords[vi] + offsets[ii];
 
-                 output.pos = vec4f( vxcoord  ,0, 1);
-                 output.color = colors[vi];
+                output.pos = vec4f( vxcoord  ,0, 1);
+
+                var melange: vec3f; 
+                const arraylength = 5;
+                var ensemble: array<LightDiffusion, arraylength>;
 
 
-                 output.light_incidence =   mx_2d_litght_selector(u32(lightparams[0]), lightcoords, vxcoord,  lightparams[2], lightparams[3]);
+                var ld1: LightDiffusion;
+                ld1.lightType = u32(lightparams[0]);
+                ld1.blendOption = u32(lightparams[1]);
+                ld1.lightCoords = lightcoords;
+                ld1.lightColor = lightcolors;
+                ld1.lightIntensity = lightparams[2];
+                ld1.lightSpectre = lightparams[3];
+                ld1.vxCoords = vxcoord;
+                ld1.vxColor = colors[vi];
 
 
-                 return output; 
+                var ld2: LightDiffusion;
+                ld2.lightType = u32(lightparams[0]);
+                ld2.blendOption = u32(lightparams[1]);
+                ld2.lightCoords = vec2f(0.0,0.75);
+                ld2.lightColor = vec3f(0.0,1.0,0);
+                ld2.lightIntensity = lightparams[2];
+                ld2.lightSpectre = lightparams[3];
+                ld2.vxCoords = vxcoord;
+                
 
-              }
-    
+                var ld3: LightDiffusion;
+                ld3.lightType = u32(lightparams[0]);
+                ld3.blendOption = u32(lightparams[1]);
+                ld3.lightCoords = vec2f(0.0,-0.75);
+                ld3.lightColor = vec3f(1.0,1.0,0);
+                ld3.lightIntensity = lightparams[2];
+                ld3.lightSpectre = lightparams[3];
+                ld3.vxCoords = vxcoord;
+                
+                
+                var ld4: LightDiffusion;
+                ld4.lightType = u32(lightparams[0]);
+                ld4.blendOption = u32(lightparams[1]);
+                ld4.lightCoords = vec2f(0.75, 0);
+                ld4.lightColor = vec3f(0.0,0.0,1.0);
+                ld4.lightIntensity = lightparams[2];
+                ld4.lightSpectre = lightparams[3];
+                ld4.vxCoords = vxcoord;
 
-            //   color_blendADD,  color_blendAVG, color_blendMULT , color_blendSCREEN 
 
-              @fragment fn fs(@location(0) color : vec3f, @location(1) light_incidence: f32) -> @location(0) vec4f {
-                  return vec4f(  color_blendSCREEN ( vec3f(light_incidence*lightcolors.r, light_incidence*lightcolors.g,  light_incidence*lightcolors.b), color ), 1);
-              }
+                var ld5: LightDiffusion;
+                ld5.lightType = u32(lightparams[0]);
+                ld5.blendOption = u32(lightparams[1]);
+                ld5.lightCoords = vec2f(-0.75, 0);
+                ld5.lightColor = vec3f(1.0,0.0,0.0);
+                ld5.lightIntensity = lightparams[2];
+                ld5.lightSpectre = lightparams[3];
+                ld5.vxCoords = vxcoord;
+     
+                ensemble[0] = ld1;
+                ensemble[1] = ld2;
+                ensemble[2] = ld3;
+                ensemble[3] = ld4;
+                ensemble[4] = ld5;
+
+                melange = applyLightOnVertex(ensemble[0]);
+                for (var i = 1; i < arraylength ; i++) {
+
+                    ensemble[i].vxColor = melange;
+                    melange = applyLightOnVertex( ensemble[i]);
+
+                }
+
+                output.color =  melange;
+                return output; 
+
+             }   
+   
+
+             @fragment fn fs(@location(0) color : vec3f) -> @location(0) vec4f {
+
+                 return vec4f(color, 1); 
+             }
+
+        
             
             ` ;
         }
@@ -595,7 +663,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
 
                     {    // light color
                         binding: 4 , 
-                        visibility: GPUShaderStage.FRAGMENT , 
+                        visibility: GPUShaderStage.VERTEX , 
                         buffer: {
                             type: "read-only-storage"    
                         }

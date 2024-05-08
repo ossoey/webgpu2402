@@ -9,13 +9,10 @@
 // import { EbkWEBGPU} from "./modules/ebikaWEBGPU.js";
 // import { EbkMIDI} from "./modules/ebikaMIDI.js";
 
-
-
 import  {polygone_upload_data_bndgroup_only_basics2} from "./polygone_upload_data_bndgroup_only_basics2.js";
 import  {polygone_upload_data_bndgroup_only_basics1} from "./polygone_upload_data_bndgroup_only_basics1.js";
-import  {polygone_upload_data_bndgroup_only_basicsO} from "./polygone_upload_data_bndgroup_only_basicsO.js";
-import { polygone_upload_data1} from "./polygone_upload_data1.js";
-import { polygone_upload_data_bndgroup_only_basics} from "./polygone_upload_data_bndgroup_only_basics.js";
+import  {polygone_upload_data_bndgroup_only_basics} from "./polygone_upload_data_bndgroup_only_basics.js";
+
 import { squareInGrid} from "./squareInGrid.js";
 import { square} from "./square.js";
 import { circlesTriangleStripRandomAttributes} from "./circlesTriangleStripRandomAttributes.js";
@@ -54,11 +51,8 @@ let projects = {};
  projects.entries = [
 
   polygone_upload_data_bndgroup_only_basics2(projects.paramsIn),
- // polygone_upload_data_bndgroup_only_basics1(projects.paramsIn),
- // polygone_upload_data_bndgroup_only_basicsO(projects.paramsIn),
- // polygone_upload_data_bndgroup_only_basics(projects.paramsIn),
- // polygone_upload_data1(projects.paramsIn),
-  
+  polygone_upload_data_bndgroup_only_basics1(projects.paramsIn),
+  polygone_upload_data_bndgroup_only_basics(projects.paramsIn),
   
   squareInGrid(projects.paramsIn),
   square(projects.paramsIn),
