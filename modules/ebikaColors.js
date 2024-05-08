@@ -108,7 +108,50 @@ Ebk.Colors =  {
             );
         } 
 
-            
+        fn color_blendSOPTION(option : u32 ,colorA: vec3f, colorB: vec3f)->vec3f {
+ 
+           var result: vec3f; 
+
+            if(option == 1) {
+                result =  color_blendAVG(colorA, colorB);
+            } else if (option == 2) {
+                result =  color_blendADD(colorA, colorB);
+            }
+            else if (option == 3) {
+                result =  color_blendMULT(colorA, colorB);
+            }
+
+            else if (option == 4) {
+                result =  color_blendSCREEN(colorA, colorB);
+            }  else  {
+                result =  color_blendAVG(colorA, colorB);
+            } 
+
+            return  result ;
+        } 
+
+        struct LightDiffusion {
+            blendOption : u32, 
+            lightType: u32, 
+            lightCoords: vec2f, 
+            lightColor: vec3f, 
+            lightIntensity: f32, 
+            lightSpectre: f32, 
+            vxCoords: vec2f, 
+            vxColor: vec3f
+        }
+
+   
+         fn applyLightOnVertex(ld: LightDiffusion)->vec3f {
+
+            var incidence : f32; 
+
+            incidence =  mx_2d_litght_selector(ld.lightType, ld.lightCoords, ld.vxCoords,  ld.lightIntensity, ld.lightSpectre);
+
+            return    color_blendSOPTION(ld.blendOption ,vec3f(incidence*ld.lightColor.r, incidence*ld.lightColor.g,  incidence*ld.lightColor.b), ld.vxColor );
+
+         } 
+
     `
 
 
