@@ -17,7 +17,7 @@ Ebk.isArray = (value) =>{
     if  (Array.isArray(value)) return true
     else return false;
 }
-
+/*  */
 Ebk.isArrayOfNumbers = (value) =>{
     let   isAllNumbers = true; 
 
