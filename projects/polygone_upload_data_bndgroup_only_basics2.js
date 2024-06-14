@@ -328,7 +328,7 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
         ]   }    ) ;
 
 
-        ops.ui.lightElements.colorStart.value = EbkColors.rgbToHexa({color:[200, 10, 20] });
+        ops.ui.lightElements.colorStart.value = EbkColors.rgbToHexa({color:[0, 100, 200] });
         ops.ui.lightElements.colorEnd.value = EbkColors.rgbToHexa({color:[125, 130, 140] });
 
         ops.ui.lightElements.positionXStart.value = -1;
