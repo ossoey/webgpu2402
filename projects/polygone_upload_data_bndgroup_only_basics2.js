@@ -1,8 +1,11 @@
 
 import { Ebk} from "../modules/ebika.js";
+
 import { EbkUI} from "../modules/ebikaUI.js";
 import { EbkColors} from "../modules/ebikaColors.js";
 import { EbkGeometry} from "../modules/ebikaGeometry.js";
+import { EbkEls} from "../modules/ebkelts.js";
+
 
 
 
@@ -29,6 +32,11 @@ import { EbkGeometry} from "../modules/ebikaGeometry.js";
     
         // Création des ui 
         ops.createUI = () =>{
+
+                  
+
+          let frm = EbkEls.createFraming();
+          frm.locate();   
 
                 let prevWidth = window.innerWidth;
 
