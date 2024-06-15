@@ -36,7 +36,8 @@ import { EbkEls} from "../modules/ebkelts.js";
                   
 
           let frm = EbkEls.createFraming();
-          frm.locate();   
+       
+          frm.locate();
 
                 let prevWidth = window.innerWidth;
 
