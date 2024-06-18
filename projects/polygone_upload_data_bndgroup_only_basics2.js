@@ -33,11 +33,22 @@ import { EbkEls} from "../modules/ebkelts.js";
         // Création des ui 
         ops.createUI = () =>{
 
-                  
+          let frm = EbkEls.Framing  
 
-          let frm = EbkEls.createFraming();
-       
+          //let frm = EbkEls.createFraming();
           frm.locate();
+          console.log(  frm.locate1({ 
+
+            src:  { 
+                frame:  [6, 16], 
+                value:  6
+            } , 
+            dst: { 
+                frame: [23, 400] 
+            } 
+    
+            }));   
+         // frm.locate();
 
                 let prevWidth = window.innerWidth;
 
