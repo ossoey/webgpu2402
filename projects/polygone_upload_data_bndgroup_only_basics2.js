@@ -36,18 +36,21 @@ import { EbkEls} from "../modules/ebkelts.js";
           let frm = EbkEls.Framing  
 
           //let frm = EbkEls.createFraming();
-          frm.locate();
-          console.log(  frm.locate1({ 
+         // frm.locate();
+          console.log(  frm.transpose({ 
 
             src:  { 
-                frame:  [6, 16], 
-                value:  6
-            } , 
+                frame:  [1, 6], 
+                value:   7
+            }  , 
             dst: { 
-                frame: [23, 400] 
-            } 
+                frame:  [1, 300] 
+            }  
     
             }));   
+
+            frm.tests();
+            
          // frm.locate();
 
                 let prevWidth = window.innerWidth;
