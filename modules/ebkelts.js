@@ -53,6 +53,24 @@ class Tests {
   
       });
     }
+
+
+    static getDefaultParameters(func) {
+      // Use regex to extract parameter names and default values from the function's source code
+      const funcString = func.toString();
+      const params = funcString.slice(funcString.indexOf('(') + 1, funcString.indexOf(')')).split(',').map(param => param.trim());
+      const defaults = {};
+  
+      params.forEach(param => {
+          const [name, defaultValue] = param.split('=').map(item => item.trim());
+          if (defaultValue !== undefined) {
+              defaults[name] = defaultValue;
+          }
+      });
+  
+      return defaults;
+  }
+
 }
 
 
@@ -112,6 +130,8 @@ class Framing {
 
             let vld = Validation;
 
+            
+
             // Validate src and dst objects
             vld.object({ frame: srcFrame, value: srcValue }, 'src');
             vld.object({ frame: dstFrame }, 'dst');
@@ -132,6 +152,33 @@ class Framing {
             console.error(error.message);
             return  `Class:Framing/transpose: ${error.message}`;
         }
+    }
+
+    static transpose__desc() {
+      try {
+
+          return { input: { 
+            
+            src:  { 
+                frame: [1, 6], 
+                value: 125 
+            } ,  
+            dst: { 
+                frame: [2, 300] 
+             }  
+      
+          } ,
+
+          method: `transpose()` ,
+          description: `Transpose a variable from one interval to another.` , 
+          output: `real`     
+        
+         }
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/transpose: ${error.message}`;
+      }
     }
 
     static transposeClamp({ 
@@ -359,6 +406,9 @@ class Framing {
 
     static tests(params) {
       Tests.testStaticMethodsParamsOptions(this, params);
+     // console.log(Tests.getParametersWithDefaults(this.transpose()));
+
+     console.log(Tests.getDefaultParameters(this.transpose));
     } 
 
   
