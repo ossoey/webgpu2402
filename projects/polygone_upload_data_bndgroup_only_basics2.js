@@ -49,7 +49,22 @@ import { EbkEls} from "../modules/ebkelts.js";
     
             }));   
 
-            frm.tests();
+            frm.tests( [ {dfdf:2} , {el:6}, { 
+
+                src:  { 
+                    frame:  [1, 6], 
+                    value: -5.28,
+                    values: [1, 7, 9, -1, 2],
+                    vectorFrame: [[1, 6], [-1 , 1], [0, 5] ], 
+                    vector: [1 , 9, 8 ]
+
+                }  , 
+                dst: { 
+                    frame: [2, 300],
+                    vectorFrame:  [[10, -6], [-11 , 101], [50, 15]] 
+                }  
+          
+                }]);
             
          // frm.locate();
 

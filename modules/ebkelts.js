@@ -54,23 +54,6 @@ class Tests {
       });
     }
 
-
-    static getDefaultParameters(func) {
-      // Use regex to extract parameter names and default values from the function's source code
-      const funcString = func.toString();
-      const params = funcString.slice(funcString.indexOf('(') + 1, funcString.indexOf(')')).split(',').map(param => param.trim());
-      const defaults = {};
-  
-      params.forEach(param => {
-          const [name, defaultValue] = param.split('=').map(item => item.trim());
-          if (defaultValue !== undefined) {
-              defaults[name] = defaultValue;
-          }
-      });
-  
-      return defaults;
-  }
-
 }
 
 
@@ -93,6 +76,20 @@ class Validation {
         }
       });
     }
+
+    static arrayOfArraysOf(arr, validator, name) {
+      if (!Array.isArray(arr)) {
+        throw new Error(`${name} must be an array`);
+      }
+      arr.forEach((item) => {
+        try {
+          this.arrayOf(item, validator, name);
+        } catch (error) {
+          throw new Error(`${name} must be an array of arrays`);
+        }
+      });
+    }
+  
   
     static number(value, name) {
       if (typeof value !== 'number' || isNaN(value)) {
@@ -154,33 +151,6 @@ class Framing {
         }
     }
 
-    static transpose__desc() {
-      try {
-
-          return { input: { 
-            
-            src:  { 
-                frame: [1, 6], 
-                value: 125 
-            } ,  
-            dst: { 
-                frame: [2, 300] 
-             }  
-      
-          } ,
-
-          method: `transpose()` ,
-          description: `Transpose a variable from one interval to another.` , 
-          output: `real`     
-        
-         }
-
-      } catch (error) {
-          console.error(error.message);
-          return  `Class:Framing/transpose: ${error.message}`;
-      }
-    }
-
     static transposeClamp({ 
 
       src:  { 
@@ -240,6 +210,451 @@ class Framing {
           return  `Class:Framing/transposeClamp: ${error.message}`;
       }
     }
+
+    static transposeArray({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          values: srcValues = [1, 7, 9, -1, 2]
+      } = {}, 
+      dst: { 
+          frame: dstFrame = [2, 300] 
+      } = {} 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+
+          
+          vld.arrayOf(srcValues, vld.number, 'src.values');
+          
+          let result = [];
+
+          srcValues.forEach( value => {
+
+            result.push( this.transpose( { 
+
+              src:  { 
+                  frame: srcFrame , 
+                  value: value 
+              } , 
+              dst: { 
+                  frame: dstFrame  
+              }  
+      
+            }) );
+
+          });
+        
+          return  result 
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/transposeArray: ${error.message}`;
+      }
+    }
+
+    static transposeClampArray({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          values: srcValues = [1, 7, 9, -1, 2]
+      } = {}, 
+      dst: { 
+          frame: dstFrame = [2, 300] 
+      } = {} 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+
+          
+          vld.arrayOf(srcValues, vld.number, 'src.values');
+          
+          let result = [];
+
+          srcValues.forEach( value => {
+
+            result.push( this.transposeClamp( { 
+
+              src:  { 
+                  frame: srcFrame , 
+                  value: value 
+              } , 
+              dst: { 
+                  frame: dstFrame  
+              }  
+      
+            }) );
+
+          });
+        
+          return  result 
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/transposeArray: ${error.message}`;
+      }
+    }
+
+    static transposeVector({ 
+
+      src:  { 
+          vectorFrame: srcVectorFrame = [[1, 6], [-1 , 1], [0, 5] ], 
+          vector: srcVector = [1, 2, 9]
+      } = {}, 
+      dst: { 
+          vectorFrame: dstVectorFrame = [[10, -6], [-11 , 101], [50, 15]] 
+      } = {} 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+
+          vld.arrayOfArraysOf(srcVectorFrame,  vld.number, 'vectorFrame.srcVectorFrame');
+          vld.arrayOfArraysOf(dstVectorFrame ,  vld.number, 'vectorFrame.dstVectorFrame');
+          vld.arrayOf(srcVector,  vld.number, 'src.vector');
+
+          if (!(srcVector.length === srcVectorFrame.length)
+            ||!(srcVector.length === dstVectorFrame.length)
+            ||!(srcVectorFrame.length === dstVectorFrame.length)) {
+            throw new Error(`src.vectorFrame, dst.vectorFrame and src.vector length must be the equal`)
+          }
+
+          let result = [];
+
+          srcVector.forEach( (value, ndx) => {
+            
+            result.push(
+               this.transpose({ 
+                src:  { 
+                    frame: srcVectorFrame[ndx], 
+                    value: value
+                } , 
+                dst: { 
+                    frame: dstVectorFrame[ndx]
+                } 
+                } )
+            )
+
+          })
+
+          return  result 
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/transposeArray: ${error.message}`;
+      }
+    }
+
+    static transposeVectorClamp({ 
+
+      src:  { 
+          vectorFrame: srcVectorFrame = [[1, 6], [-1 , 1], [0, 5] ], 
+          vector: srcVector = [1, 2, 9]
+      } = {}, 
+      dst: { 
+          vectorFrame: dstVectorFrame = [[10, -6], [-11 , 101], [50, 15]] 
+      } = {} 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+
+          vld.arrayOfArraysOf(srcVectorFrame,  vld.number, 'vectorFrame.srcVectorFrame');
+          vld.arrayOfArraysOf(dstVectorFrame ,  vld.number, 'vectorFrame.dstVectorFrame');
+          vld.arrayOf(srcVector,  vld.number, 'src.vector');
+
+          if (!(srcVector.length === srcVectorFrame.length)
+            ||!(srcVector.length === dstVectorFrame.length)
+            ||!(srcVectorFrame.length === dstVectorFrame.length)) {
+            throw new Error(`src.vectorFrame, dst.vectorFrame and src.vector length must be the equal`)
+          }
+
+          let result = [];
+
+          srcVector.forEach( (value, ndx) => {
+            
+            result.push(
+               this.transposeClamp({ 
+                src:  { 
+                    frame: srcVectorFrame[ndx], 
+                    value: value
+                } , 
+                dst: { 
+                    frame: dstVectorFrame[ndx]
+                } 
+                } )
+            )
+
+          })
+
+          return  result 
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/transposeArray: ${error.message}`;
+      }
+    }
+
+
+    static toUnit({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          value: srcValue = 125 
+      } = {}, 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+          // Validate src and dst objects
+          vld.object({ frame: srcFrame, value: srcValue }, 'src');
+
+          // Validate src properties
+          vld.arrayOf(srcFrame, vld.number, 'src.frame');
+          vld.number(srcValue, 'src.value');
+          
+    
+          return  this.transpose({ 
+
+            src:  { 
+                frame: srcFrame, 
+                value: srcValue 
+            }, 
+            dst: { 
+                frame: [0., 1.] 
+            } 
+    
+            } );
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/normalize: ${error.message}`;
+      }
+    }
+  
+    static toNegUnit({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          value: srcValue = 125 
+      } = {}, 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+          // Validate src and dst objects
+          vld.object({ frame: srcFrame, value: srcValue }, 'src');
+
+          // Validate src properties
+          vld.arrayOf(srcFrame, vld.number, 'src.frame');
+          vld.number(srcValue, 'src.value');
+          
+    
+          return  this.transpose({ 
+
+            src:  { 
+                frame: srcFrame, 
+                value: srcValue 
+            }, 
+            dst: { 
+                frame: [0., -1.] 
+            } 
+    
+            } );
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/normalize: ${error.message}`;
+      }
+    }
+  
+    static toSymUnit({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          value: srcValue = 125 
+      } = {}, 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+          // Validate src and dst objects
+          vld.object({ frame: srcFrame, value: srcValue }, 'src');
+
+          // Validate src properties
+          vld.arrayOf(srcFrame, vld.number, 'src.frame');
+          vld.number(srcValue, 'src.value');
+          
+    
+          return  this.transpose({ 
+
+            src:  { 
+                frame: srcFrame, 
+                value: srcValue 
+            }, 
+            dst: { 
+                frame: [-1., 1.] 
+            } 
+    
+            } );
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/normalize: ${error.message}`;
+      }
+    }
+  
+  
+    static toUnitClamp({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          value: srcValue = 125 
+      } = {}, 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+          // Validate src and dst objects
+          vld.object({ frame: srcFrame, value: srcValue }, 'src');
+
+          // Validate src properties
+          vld.arrayOf(srcFrame, vld.number, 'src.frame');
+          vld.number(srcValue, 'src.value');
+          
+    
+          return  this.transposeClamp({ 
+
+            src:  { 
+                frame: srcFrame, 
+                value: srcValue 
+            }, 
+            dst: { 
+                frame: [0., 1.] 
+            } 
+    
+            } );
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/normalize: ${error.message}`;
+      }
+    }
+
+    static toNegUnitClamp({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          value: srcValue = 125 
+      } = {}, 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+          // Validate src and dst objects
+          vld.object({ frame: srcFrame, value: srcValue }, 'src');
+
+          // Validate src properties
+          vld.arrayOf(srcFrame, vld.number, 'src.frame');
+          vld.number(srcValue, 'src.value');
+          
+    
+          return  this.transposeClamp({ 
+
+            src:  { 
+                frame: srcFrame, 
+                value: srcValue 
+            }, 
+            dst: { 
+                frame: [0., -1.] 
+            } 
+    
+            } );
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/normalize: ${error.message}`;
+      }
+    }
+  
+    static toSymUnitClamp({ 
+
+      src:  { 
+          frame: srcFrame = [1, 6], 
+          value: srcValue = 125 
+      } = {}, 
+
+      } = {}) {
+      try {
+
+          let vld = Validation;
+          // Validate src and dst objects
+          vld.object({ frame: srcFrame, value: srcValue }, 'src');
+
+          // Validate src properties
+          vld.arrayOf(srcFrame, vld.number, 'src.frame');
+          vld.number(srcValue, 'src.value');
+          
+    
+          return  this.transposeClamp({ 
+
+            src:  { 
+                frame: srcFrame, 
+                value: srcValue 
+            }, 
+            dst: { 
+                frame: [-1., 1.] 
+            } 
+    
+            } );
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/normalize: ${error.message}`;
+      }
+    }
+
+   
+   
+
+    static transpose__desc() {
+      try {
+
+          return { input: { 
+            
+            src:  { 
+                frame: [1, 6], 
+                value: 125 
+            } ,  
+            dst: { 
+                frame: [2, 300] 
+             }  
+      
+          } ,
+
+          method: `transpose()` ,
+          description: `Transpose a variable from one interval to another.` , 
+          output: `real`     
+        
+         }
+
+      } catch (error) {
+          console.error(error.message);
+          return  `Class:Framing/transpose: ${error.message}`;
+      }
+    }
+
 
     static unit({ 
 
@@ -408,7 +823,6 @@ class Framing {
       Tests.testStaticMethodsParamsOptions(this, params);
      // console.log(Tests.getParametersWithDefaults(this.transpose()));
 
-     console.log(Tests.getDefaultParameters(this.transpose));
     } 
 
   
