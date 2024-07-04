@@ -37,17 +37,7 @@ import { EbkEls} from "../modules/ebkelts.js";
 
           //let frm = EbkEls.createFraming();
          // frm.locate();
-          console.log(  frm.transpose({ 
-
-            src:  { 
-                frame:  [1, 6], 
-                value:   7
-            }  , 
-            dst: { 
-                frame:  [1, 300] 
-            }  
     
-            }));   
 
             frm.tests( [ {dfdf:2} , {el:6}, { 
 
@@ -56,7 +46,8 @@ import { EbkEls} from "../modules/ebkelts.js";
                     value: -5.28,
                     values: [1, 7, 9, -1, 2],
                     vectorFrame: [[1, 6], [-1 , 1], [0, 5] ], 
-                    vector: [1 , 9, 8 ]
+                    vector: [1 , 9, 8 ],
+                    vectors:  [[1, 5, 0 ], [0, 8, -2 ]]
 
                 }  , 
                 dst: { 
