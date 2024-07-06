@@ -16,7 +16,7 @@ import { EbkEls} from "../modules/ebkelts.js";
         ops.desc = "polygon, upload data bindgroup only, basics2";
         
         // Préparation des données
-        ops.ui = {};
+        ops.ui = {};  
         ops.env = {};
         ops.env.adpter;
         ops.env.device;
